@@ -1,4 +1,4 @@
-export type ApiResult<T> = T;
+export type ApiResult<T> = T & { error?: string };
 
 export type TmdbPagedResponse<T> = {
   page: number;

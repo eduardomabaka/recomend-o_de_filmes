@@ -52,7 +52,23 @@ function jsonBody(): array
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+// Normaliza caminhos para funcionar com/sem rewrite e com /index.php no URL.
+$path = $requestPath;
+$scriptName = (string)($_SERVER['SCRIPT_NAME'] ?? '');
+$scriptDir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+if ($scriptDir !== '' && $scriptDir !== '.' && str_starts_with($path, $scriptDir . '/')) {
+    $path = substr($path, strlen($scriptDir));
+}
+$indexMarker = '/index.php';
+$indexPos = strpos($path, $indexMarker);
+if ($indexPos !== false) {
+    $path = substr($path, $indexPos + strlen($indexMarker));
+}
+if ($path === '' || $path[0] !== '/') {
+    $path = '/' . ltrim($path, '/');
+}
 
 // Router simples
 $result = null;

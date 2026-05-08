@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "backend": "php -S 127.0.0.1:8010 -t ../backend/public ../backend/public/index.php",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

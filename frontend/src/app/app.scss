@@ -1,5 +1,7 @@
 /* App layout */
 .app-shell {
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
   background: #0b1220;
   color: #e6e9f2;
@@ -50,8 +52,31 @@ a.active {
 }
 
 .container {
+  flex: 1;
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.2rem;
+}
+
+.footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(13, 20, 38, 0.75);
+}
+
+.footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 1.2rem 1.4rem;
+  color: rgba(230, 233, 242, 0.75);
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+}
+
+.footer-content p {
+  margin: 0;
 }
 

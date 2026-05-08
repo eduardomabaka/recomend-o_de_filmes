@@ -4,13 +4,21 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development server
 
-To start a local development server, run:
+Start the PHP API in one terminal:
 
 ```bash
-ng serve
+npm run backend
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Then start Angular in another terminal:
+
+```bash
+npm start
+```
+
+Once the server is running, open the URL shown by Angular, usually `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+During `ng serve`, the frontend calls the API at `http://127.0.0.1:8010/index.php`. If you prefer XAMPP/Apache, make sure Apache is running and serving the project from `/filme/backend/public/index.php`.
 
 ## Code scaffolding
 
