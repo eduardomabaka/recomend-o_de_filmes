@@ -7,12 +7,14 @@ final class TmdbService
     private string $apiKey;
     private string $readAccessToken;
     private string $baseUrl;
+    private string $cacheDir;
 
     public function __construct(?string $apiKey = null, string $baseUrl = 'https://api.themoviedb.org/3')
     {
         $this->apiKey = $apiKey ?: (string)(getenv('TMDB_API_KEY') ?: '');
         $this->readAccessToken = (string)(getenv('TMDB_READ_ACCESS_TOKEN') ?: '');
         $this->baseUrl = rtrim($baseUrl, '/');
+        $this->cacheDir = __DIR__ . '/../storage/cache/tmdb';
     }
 
     public function searchMovies(string $query, string $language = 'pt-PT', int $page = 1): array
@@ -49,6 +51,12 @@ final class TmdbService
             ];
         }
 
+        $cacheKey = $this->buildCacheKey($path, $query);
+        $cached = $this->readCache($cacheKey);
+        if ($cached !== null) {
+            return $cached;
+        }
+
         if ($this->apiKey !== '') {
             $query = array_merge($query, ['api_key' => $this->apiKey]);
         }
@@ -76,7 +84,56 @@ final class TmdbService
             return ['error' => 'Resposta inválida do TMDB.'];
         }
 
+        $this->writeCache($cacheKey, $decoded);
         return $decoded;
+    }
+
+    private function buildCacheKey(string $path, array $query): string
+    {
+        ksort($query);
+        return sha1($path . '|' . json_encode($query, JSON_UNESCAPED_UNICODE));
+    }
+
+    private function cacheFilePath(string $cacheKey): string
+    {
+        return $this->cacheDir . '/' . $cacheKey . '.json';
+    }
+
+    private function readCache(string $cacheKey): ?array
+    {
+        $file = $this->cacheFilePath($cacheKey);
+        if (!is_file($file)) {
+            return null;
+        }
+
+        // Cache curto para manter dados frescos.
+        $ttlSeconds = 300;
+        $mtime = filemtime($file);
+        if ($mtime === false || (time() - $mtime) > $ttlSeconds) {
+            return null;
+        }
+
+        $raw = file_get_contents($file);
+        if ($raw === false || $raw === '') {
+            return null;
+        }
+
+        $decoded = json_decode($raw, true);
+        return is_array($decoded) ? $decoded : null;
+    }
+
+    private function writeCache(string $cacheKey, array $payload): void
+    {
+        if (!is_dir($this->cacheDir)) {
+            @mkdir($this->cacheDir, 0775, true);
+        }
+
+        if (!is_dir($this->cacheDir) || !is_writable($this->cacheDir)) {
+            return;
+        }
+
+        $file = $this->cacheFilePath($cacheKey);
+        @file_put_contents($file, json_encode($payload, JSON_UNESCAPED_UNICODE));
     }
 }
 
