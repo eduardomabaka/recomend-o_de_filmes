@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth.guard';
+import { HomePage } from './pages/home/home.page';
 import { PopularPage } from './pages/popular/popular.page';
 import { SearchPage } from './pages/search/search.page';
 import { RecommendationsPage } from './pages/recommendations/recommendations.page';
@@ -9,6 +11,10 @@ import { FavoritesPage } from './pages/favorites/favorites.page';
 export const routes: Routes = [
   {
     path: '',
+    component: HomePage
+  },
+  {
+    path: 'popular',
     component: PopularPage
   },
   {
@@ -17,7 +23,8 @@ export const routes: Routes = [
   },
   {
     path: 'movie/:id/recommendations',
-    component: RecommendationsPage
+    component: RecommendationsPage,
+    canActivate: [authGuard]
   },
   {
     path: 'login',
@@ -29,7 +36,8 @@ export const routes: Routes = [
   },
   {
     path: 'favorites',
-    component: FavoritesPage
+    component: FavoritesPage,
+    canActivate: [authGuard]
   },
   { path: '**', redirectTo: '' }
 ];

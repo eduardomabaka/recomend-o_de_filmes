@@ -4,20 +4,28 @@
   height: 100%;
   overflow: hidden;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: inherit;
+  text-decoration: none;
   transition: transform 0.12s ease, background 0.12s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .card:hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-strong);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 .poster {
   display: block;
   aspect-ratio: 2 / 3;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-muted);
 }
 
 img {
@@ -31,7 +39,7 @@ img {
   height: 100%;
   display: grid;
   place-items: center;
-  color: rgba(230, 233, 242, 0.7);
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
@@ -60,11 +68,10 @@ img {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  color: rgba(230, 233, 242, 0.75);
+  color: var(--text-muted);
   font-size: 0.85rem;
 }
 
 .dot {
   opacity: 0.6;
 }
-

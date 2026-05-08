@@ -17,7 +17,12 @@
       />
     </label>
 
-    <button type="submit">Entrar</button>
+    @if (error()) {
+      <p class="form-error">{{ error() }}</p>
+    }
+
+    <button type="submit" [disabled]="loading()">
+      {{ loading() ? 'A entrar...' : 'Entrar' }}
+    </button>
   </form>
 </section>
-

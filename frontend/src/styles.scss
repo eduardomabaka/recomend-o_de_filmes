@@ -2,6 +2,47 @@
   box-sizing: border-box;
 }
 
+:root {
+  color-scheme: dark;
+  --bg: #0b1220;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.06);
+  --surface-muted: rgba(255, 255, 255, 0.03);
+  --surface-accent: rgba(124, 58, 237, 0.12);
+  --text: #e6e9f2;
+  --text-strong: #ffffff;
+  --text-muted: rgba(230, 233, 242, 0.75);
+  --text-soft: rgba(230, 233, 242, 0.85);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-accent: rgba(124, 58, 237, 0.35);
+  --danger-border: rgba(255, 59, 129, 0.35);
+  --topbar-bg: rgba(13, 20, 38, 0.85);
+  --footer-bg: rgba(13, 20, 38, 0.75);
+  --primary-gradient: linear-gradient(135deg, #ff3b81, #7c3aed);
+  --focus-ring: rgba(255, 59, 129, 0.75);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f1f3f7;
+  --surface: #fbfcfe;
+  --surface-strong: #e8ebf1;
+  --surface-muted: #e2e6ee;
+  --surface-accent: rgba(124, 58, 237, 0.06);
+  --text: #202637;
+  --text-strong: #141a2a;
+  --text-muted: rgba(32, 38, 55, 0.62);
+  --text-soft: rgba(32, 38, 55, 0.78);
+  --border: rgba(32, 38, 55, 0.09);
+  --border-strong: rgba(32, 38, 55, 0.14);
+  --border-accent: rgba(124, 58, 237, 0.22);
+  --danger-border: rgba(217, 38, 103, 0.3);
+  --topbar-bg: rgba(248, 250, 253, 0.86);
+  --footer-bg: rgba(248, 250, 253, 0.76);
+  --focus-ring: rgba(217, 38, 103, 0.5);
+}
+
 html,
 body {
   height: 100%;
@@ -11,12 +52,12 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial,
     'Apple Color Emoji', 'Segoe UI Emoji';
-  background: #0b1220;
-  color: #e6e9f2;
+  background: var(--bg);
+  color: var(--text);
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
-

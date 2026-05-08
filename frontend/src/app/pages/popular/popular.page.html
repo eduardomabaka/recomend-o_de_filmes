@@ -26,6 +26,17 @@
         <app-movie-card [movie]="m" />
       }
     </div>
+    @if (!auth.isLoggedIn()) {
+      <section class="guest-cta" aria-label="Convite para criar sessão">
+        <p>
+          Para pesquisar filmes, guardar favoritos e ver recomendações completas, inicia sessão ou cria uma conta.
+        </p>
+        <div class="guest-cta-actions">
+          <a routerLink="/login" class="cta-btn primary">Entrar</a>
+          <a routerLink="/register" class="cta-btn ghost">Criar conta</a>
+        </div>
+      </section>
+    }
   }
 } @else {
   <div class="loading">A carregar…</div>

@@ -1,11 +1,11 @@
-<article class="card">
-  <a class="poster" [routerLink]="['/movie', movie.id, 'recommendations']">
+<a class="card" [routerLink]="['/movie', movie.id, 'recommendations']">
+  <div class="poster">
     @if (posterUrl(); as url) {
       <img [src]="url" [alt]="movie.title" loading="lazy" />
     } @else {
       <div class="poster-fallback">Sem poster</div>
     }
-  </a>
+  </div>
 
   <div class="meta">
     <div class="title" [title]="movie.title">{{ movie.title }}</div>
@@ -15,5 +15,4 @@
       <span>{{ movie.vote_average?.toFixed?.(1) ?? '—' }}</span>
     </div>
   </div>
-</article>
-
+</a>

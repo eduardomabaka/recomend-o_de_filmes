@@ -22,7 +22,12 @@
       />
     </label>
 
-    <button type="submit">Criar conta</button>
+    @if (error()) {
+      <p class="form-error">{{ error() }}</p>
+    }
+
+    <button type="submit" [disabled]="loading()">
+      {{ loading() ? 'A criar...' : 'Criar conta' }}
+    </button>
   </form>
 </section>
-

@@ -1,12 +1,30 @@
 <div class="app-shell">
   <header class="topbar">
-    <a class="brand" routerLink="/">F Zone</a>
+    <a class="brand" routerLink="/" aria-label="F Zone — Início">
+      <img class="brand-logo" src="favicon.svg" width="40" height="40" alt="" />
+    </a>
     <nav class="nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Populares</a>
-      <a routerLink="/search" routerLinkActive="active">Pesquisar</a>
-      <a routerLink="/favorites" routerLinkActive="active">Favoritos</a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Início</a>
+      <a routerLink="/popular" routerLinkActive="active">Populares</a>
+      @if (auth.isLoggedIn()) {
+        <a routerLink="/search" routerLinkActive="active">Pesquisar</a>
+        <a routerLink="/favorites" routerLinkActive="active">Favoritos</a>
+      }
     </nav>
     <nav class="auth">
+      <button
+        class="theme-toggle"
+        type="button"
+        (click)="theme.toggle()"
+        [attr.aria-label]="theme.mode() === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'"
+        [attr.aria-pressed]="theme.mode() === 'light'"
+        [title]="theme.mode() === 'dark' ? 'Modo claro' : 'Modo escuro'"
+      >
+        <span class="theme-toggle-track" aria-hidden="true">
+          <span class="theme-toggle-thumb"></span>
+        </span>
+        <span class="theme-toggle-label">{{ theme.mode() === 'dark' ? 'Dark' : 'Light' }}</span>
+      </button>
       <a routerLink="/login" routerLinkActive="active">Entrar</a>
       <a class="btn" routerLink="/register">Criar conta</a>
     </nav>
