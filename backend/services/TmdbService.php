@@ -5,11 +5,13 @@ declare(strict_types=1);
 final class TmdbService
 {
     private string $apiKey;
+    private string $readAccessToken;
     private string $baseUrl;
 
     public function __construct(?string $apiKey = null, string $baseUrl = 'https://api.themoviedb.org/3')
     {
         $this->apiKey = $apiKey ?: (string)(getenv('TMDB_API_KEY') ?: '');
+        $this->readAccessToken = (string)(getenv('TMDB_READ_ACCESS_TOKEN') ?: '');
         $this->baseUrl = rtrim($baseUrl, '/');
     }
 
@@ -41,20 +43,26 @@ final class TmdbService
 
     private function get(string $path, array $query): array
     {
-        if ($this->apiKey === '') {
+        if ($this->apiKey === '' && $this->readAccessToken === '') {
             return [
-                'error' => 'TMDB_API_KEY não configurada.',
+                'error' => 'TMDB_API_KEY ou TMDB_READ_ACCESS_TOKEN não configurada.',
             ];
         }
 
-        $query = array_merge($query, ['api_key' => $this->apiKey]);
+        if ($this->apiKey !== '') {
+            $query = array_merge($query, ['api_key' => $this->apiKey]);
+        }
         $url = $this->baseUrl . $path . '?' . http_build_query($query);
+        $headers = "Accept: application/json\r\n";
+        if ($this->readAccessToken !== '') {
+            $headers .= "Authorization: Bearer {$this->readAccessToken}\r\n";
+        }
 
         $ctx = stream_context_create([
             'http' => [
                 'method' => 'GET',
                 'timeout' => 10,
-                'header' => "Accept: application/json\r\n",
+                'header' => $headers,
             ],
         ]);
 

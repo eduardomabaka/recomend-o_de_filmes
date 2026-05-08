@@ -1,0 +1,19 @@
+<article class="card">
+  <a class="poster" [routerLink]="['/movie', movie.id, 'recommendations']">
+    @if (posterUrl(); as url) {
+      <img [src]="url" [alt]="movie.title" loading="lazy" />
+    } @else {
+      <div class="poster-fallback">Sem poster</div>
+    }
+  </a>
+
+  <div class="meta">
+    <div class="title" [title]="movie.title">{{ movie.title }}</div>
+    <div class="sub">
+      <span>{{ movie.release_date || '—' }}</span>
+      <span class="dot">•</span>
+      <span>{{ movie.vote_average?.toFixed?.(1) ?? '—' }}</span>
+    </div>
+  </div>
+</article>
+

@@ -1,0 +1,40 @@
+<section class="header">
+  <div>
+    <h2>Pesquisar</h2>
+    <p>Procure filmes pelo título.</p>
+  </div>
+</section>
+
+<form class="form" (submit)="$event.preventDefault(); submit()">
+  <input [(ngModel)]="q" name="q" placeholder="Ex.: Inception" />
+  <select [value]="lang()" (change)="lang.set(($any($event.target).value))">
+    <option value="pt-PT">pt-PT</option>
+    <option value="en-US">en-US</option>
+  </select>
+  <button type="submit">Pesquisar</button>
+</form>
+
+@if (!q.trim()) {
+  <div class="hint">Digite algo para pesquisar.</div>
+} @else {
+  @if (vm$() | async; as data) {
+    @if (data?.error) {
+      <div class="error">{{ data.error }}</div>
+    } @else {
+      <div class="pager">
+        <button (click)="prev()" [disabled]="page() <= 1">Anterior</button>
+        <span>Página {{ page() }}</span>
+        <button (click)="next()">Próxima</button>
+      </div>
+
+      <div class="grid">
+        @for (m of data.results; track m.id) {
+          <app-movie-card [movie]="m" />
+        }
+      </div>
+    }
+  } @else {
+    <div class="loading">A carregar…</div>
+  }
+}
+

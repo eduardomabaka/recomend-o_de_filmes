@@ -1,0 +1,28 @@
+<section class="card">
+  <h2>Criar conta</h2>
+  <p>Crie um utilizador para guardar favoritos e avaliações.</p>
+
+  <form (submit)="$event.preventDefault(); submit()">
+    <label>
+      <span>Nome</span>
+      <input [(ngModel)]="name" name="name" />
+    </label>
+
+    <label>
+      <span>Email</span>
+      <input [(ngModel)]="email" name="email" type="email" />
+    </label>
+
+    <label>
+      <span>Palavra-passe</span>
+      <input
+        [(ngModel)]="password"
+        name="password"
+        type="password"
+      />
+    </label>
+
+    <button type="submit">Criar conta</button>
+  </form>
+</section>
+

@@ -4,6 +4,33 @@ declare(strict_types=1);
 
 session_start();
 
+// Carrega variáveis locais de ambiente (ex.: backend/.env), sem sobrescrever as já definidas no sistema.
+$envPath = __DIR__ . '/../.env';
+if (is_file($envPath) && is_readable($envPath)) {
+    $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+        if ($trimmed === '' || str_starts_with($trimmed, '#')) {
+            continue;
+        }
+
+        $parts = explode('=', $trimmed, 2);
+        if (count($parts) !== 2) {
+            continue;
+        }
+
+        $key = trim($parts[0]);
+        $value = trim($parts[1]);
+        if ($key === '' || getenv($key) !== false) {
+            continue;
+        }
+
+        putenv("{$key}={$value}");
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+    }
+}
+
 require_once __DIR__ . '/../controllers/AuthController.php';
 require_once __DIR__ . '/../controllers/MovieController.php';
 

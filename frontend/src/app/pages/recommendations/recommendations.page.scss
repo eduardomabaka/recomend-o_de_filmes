@@ -1,0 +1,58 @@
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  margin: 0;
+}
+
+p {
+  margin: 0.35rem 0 0;
+  color: rgba(230, 233, 242, 0.75);
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+select,
+button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e6e9f2;
+  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 0.9rem;
+}
+
+.loading,
+.error {
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.error {
+  border-color: rgba(255, 59, 129, 0.35);
+}
+

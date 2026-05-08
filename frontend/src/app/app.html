@@ -1,0 +1,18 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" routerLink="/">FS Zone</a>
+    <nav class="nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Populares</a>
+      <a routerLink="/search" routerLinkActive="active">Pesquisar</a>
+      <a routerLink="/favorites" routerLinkActive="active">Favoritos</a>
+    </nav>
+    <nav class="auth">
+      <a routerLink="/login" routerLinkActive="active">Entrar</a>
+      <a class="btn" routerLink="/register">Criar conta</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <router-outlet />
+  </main>
+</div>

@@ -1,0 +1,56 @@
+.card {
+  overflow: hidden;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.poster {
+  display: block;
+  aspect-ratio: 2 / 3;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.poster-fallback {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: rgba(230, 233, 242, 0.7);
+  font-size: 0.95rem;
+}
+
+.meta {
+  padding: 0.7rem 0.75rem 0.85rem;
+}
+
+.title {
+  font-weight: 650;
+  line-height: 1.2;
+  margin-bottom: 0.35rem;
+}
+
+.sub {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(230, 233, 242, 0.75);
+  font-size: 0.85rem;
+}
+
+.dot {
+  opacity: 0.6;
+}
+

@@ -1,0 +1,23 @@
+<section class="card">
+  <h2>Entrar</h2>
+  <p>Use o email e palavra-passe.</p>
+
+  <form (submit)="$event.preventDefault(); submit()">
+    <label>
+      <span>Email</span>
+      <input [(ngModel)]="email" name="email" type="email" />
+    </label>
+
+    <label>
+      <span>Palavra-passe</span>
+      <input
+        [(ngModel)]="password"
+        name="password"
+        type="password"
+      />
+    </label>
+
+    <button type="submit">Entrar</button>
+  </form>
+</section>
+
