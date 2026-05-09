@@ -61,3 +61,22 @@ input,
 select {
   font: inherit;
 }
+
+/* Material dialog: fundo translúcido (recomendações, etc.) */
+.cdk-overlay-backdrop.dialog-transparent-backdrop {
+  background: rgba(8, 12, 26, 0.38);
+  backdrop-filter: blur(7px);
+}
+
+:root[data-theme='light'] .cdk-overlay-backdrop.dialog-transparent-backdrop {
+  background: rgba(240, 244, 250, 0.48);
+}
+
+.dialog-glass-surface .mat-mdc-dialog-container .mdc-dialog__surface {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.35),
+    0 8px 24px rgba(0, 0, 0, 0.18);
+}

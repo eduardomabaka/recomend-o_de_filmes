@@ -16,49 +16,61 @@
           <dd>#{{ user.id }}</dd>
         </div>
       </dl>
+
+      <button type="button" class="btn-edit" (click)="openEditOverlay()">Editar perfil</button>
+
+      @if (saveBanner()) {
+        <p class="banner-success">{{ saveBanner() }}</p>
+      }
     }
   </aside>
 
-  <section class="profile-form">
-    <h2>Editar dados</h2>
+  @if (!editingOverlay()) {
+    <section class="profile-hint" aria-live="polite">
+      <p class="muted">Utilize «Editar perfil» para alterar nome, email ou palavra-passe.</p>
+    </section>
+  }
 
-    <form (submit)="$event.preventDefault(); submit()">
-      <label>
-        <span>Nome</span>
-        <input [(ngModel)]="name" name="name" autocomplete="name" />
-      </label>
+  @if (editingOverlay()) {
+    <div class="edit-overlay-backdrop" (click)="cancelEdit()" role="presentation"></div>
+    <dialog class="edit-overlay-panel" open aria-modal="true" aria-labelledby="edit-profile-heading">
+      <h2 id="edit-profile-heading">Editar dados</h2>
 
-      <label>
-        <span>Email</span>
-        <input [(ngModel)]="email" name="email" type="email" autocomplete="email" />
-      </label>
+      <form class="overlay-form" (submit)="$event.preventDefault(); submit()">
+        <label>
+          <span>Nome</span>
+          <input [(ngModel)]="name" name="name" autocomplete="name" />
+        </label>
 
-      <label>
-        <span>Nova palavra-passe</span>
-        <input [(ngModel)]="password" name="password" type="password" autocomplete="new-password" />
-      </label>
+        <label>
+          <span>Email</span>
+          <input [(ngModel)]="email" name="email" type="email" autocomplete="email" />
+        </label>
 
-      <label>
-        <span>Confirmar palavra-passe</span>
-        <input
-          [(ngModel)]="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          autocomplete="new-password"
-        />
-      </label>
+        <label>
+          <span>Nova palavra-passe</span>
+          <input [(ngModel)]="password" name="password" type="password" autocomplete="new-password" />
+        </label>
 
-      @if (error()) {
-        <p class="form-error">{{ error() }}</p>
-      }
+        <label>
+          <span>Confirmar palavra-passe</span>
+          <input
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+          />
+        </label>
 
-      @if (success()) {
-        <p class="form-success">{{ success() }}</p>
-      }
+        @if (error()) {
+          <p class="form-error">{{ error() }}</p>
+        }
 
-      <button type="submit" [disabled]="loading()">
-        {{ loading() ? 'A guardar...' : 'Guardar alterações' }}
-      </button>
-    </form>
-  </section>
+        <div class="overlay-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Cancelar</button>
+          <button type="submit" [disabled]="loading()">{{ loading() ? 'A guardar…' : 'Guardar' }}</button>
+        </div>
+      </form>
+    </dialog>
+  }
 </section>

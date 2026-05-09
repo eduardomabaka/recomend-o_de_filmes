@@ -1,33 +1,115 @@
 <section class="card">
   <h2>Criar conta</h2>
-  <p>Crie um utilizador para guardar favoritos e avaliações.</p>
+  <p>Complete o registo em três perguntas de preferências (após criar palavras-passe).</p>
 
-  <form (submit)="$event.preventDefault(); submit()">
-    <label>
-      <span>Nome</span>
-      <input [(ngModel)]="name" name="name" />
-    </label>
-
-    <label>
-      <span>Email</span>
-      <input [(ngModel)]="email" name="email" type="email" />
-    </label>
-
-    <label>
-      <span>Palavra-passe</span>
-      <input
-        [(ngModel)]="password"
-        name="password"
-        type="password"
-      />
-    </label>
-
-    @if (error()) {
-      <p class="form-error">{{ error() }}</p>
+  <div class="stepper">
+    @for (lbl of ['Conta', 'Género', 'Preferências', 'Confirmar']; track lbl; let idx = $index) {
+      <span class="pill" [class.active]="step() === idx + 1">{{ lbl }}</span>
     }
+  </div>
 
-    <button type="submit" [disabled]="loading()">
-      {{ loading() ? 'A criar...' : 'Criar conta' }}
-    </button>
-  </form>
+  @if (step() === 1) {
+    <form class="quiz-form">
+      <label>
+        <span>Nome</span>
+        <input [(ngModel)]="name" name="name" autocomplete="name" />
+      </label>
+      <label>
+        <span>Email</span>
+        <input [(ngModel)]="email" name="email" type="email" autocomplete="email" />
+      </label>
+      <label>
+        <span>Palavra-passe</span>
+        <input [(ngModel)]="password" name="password" type="password" autocomplete="new-password" />
+      </label>
+    </form>
+  }
+
+  @if (step() === 2) {
+    @if (genresError()) {
+      <p class="form-error">{{ genresError() }}</p>
+    }
+    <form class="quiz-form">
+      <p class="quiz-lead">
+        <strong>Pergunta 1.</strong>
+        Escolha o género que mais gosta para personalizar recomendações, e o que menos apreciamos destacar sempre no fim das listas.
+      </p>
+      <label>
+        <span>Género favorito</span>
+        <select [(ngModel)]="favoriteGenreId" name="gf">
+          <option [ngValue]="0" disabled>Selecionar…</option>
+          @for (g of genres(); track g.id) {
+            <option [ngValue]="g.id">{{ g.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>Género menos apreciado</span>
+        <select [(ngModel)]="worstGenreId" name="gw">
+          <option [ngValue]="0" disabled>Selecionar…</option>
+          @for (g of genres(); track g.id) {
+            <option [ngValue]="g.id">{{ g.name }}</option>
+          }
+        </select>
+      </label>
+    </form>
+  }
+
+  @if (step() === 3) {
+    <form class="quiz-form">
+      <label>
+        <span><strong>Pergunta 2.</strong> Frequência habitual de cinema em casa/streaming</span>
+        <select [(ngModel)]="quiz_answer_2" name="q2">
+          <option value="">Selecionar…</option>
+          @for (o of FREQUENCY_OPTS; track o.value) {
+            <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span><strong>Pergunta 3.</strong> Como prefere principalmente consumir filmes?</span>
+        <select [(ngModel)]="quiz_answer_3" name="q3">
+          <option value="">Selecionar…</option>
+          @for (o of CONTEXT_OPTS; track o.value) {
+            <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </label>
+    </form>
+  }
+
+  @if (step() === 4) {
+    <div class="summary">
+      <p class="muted">Revise antes de criar a conta. Depois irá ao ecrã de entrar para iniciar sessão.</p>
+      <ul class="bullets">
+        <li>{{ name }} — {{ email }}</li>
+        <li>
+          Género favorito:
+          {{ genreLabel(favoriteGenreId) }}
+          · Menos apreciado:
+          {{ genreLabel(worstGenreId) }}
+        </li>
+        <li>Ritmo (pergunta 2): {{ habitLabel(quiz_answer_2) }}</li>
+        <li>Onde prefere ver filmes (pergunta 3): {{ contextLabel(quiz_answer_3) }}</li>
+      </ul>
+    </div>
+  }
+
+  @if (error()) {
+    <p class="form-error">{{ error() }}</p>
+  }
+
+  <div class="actions">
+    @if (step() > 1) {
+      <button type="button" class="btn-secondary" (click)="back()">Anterior</button>
+    }
+    @if (step() < 4) {
+      <button type="button" (click)="next()">Seguinte</button>
+    } @else {
+      <button type="button" (click)="submit()" [disabled]="loading()">
+        {{ loading() ? 'A criar…' : 'Criar conta e ir ao login' }}
+      </button>
+    }
+  </div>
 </section>

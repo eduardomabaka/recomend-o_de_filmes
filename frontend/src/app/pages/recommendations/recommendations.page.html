@@ -26,7 +26,16 @@
     } @else {
       <div class="grid">
         @for (m of data.results; track m.id) {
-          <app-movie-card [movie]="m" (movieClick)="onMovieClick($event)" />
+          <app-movie-card
+            [movie]="m"
+            [showFavoriteButton]="auth.isLoggedIn()"
+            [favorite]="favoriteIds().includes(m.id)"
+            [recommendationRootMovieId]="movieId()"
+            [recommendationPickMovieId]="recommendationPickId()"
+            (movieClick)="onMovieClick($event)"
+            (favoriteToggle)="onFavoriteToggle(m)"
+            (recommendationFavoriteToggle)="onRecommendationFavoriteToggle($event)"
+          />
         }
       </div>
     }

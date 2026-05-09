@@ -35,6 +35,13 @@ final class TmdbService
         ]);
     }
 
+    public function getMovieGenres(string $language = 'pt-PT'): array
+    {
+        return $this->get('/genre/movie/list', [
+            'language' => $language,
+        ]);
+    }
+
     public function getRecommendations(int $tmdbMovieId, string $language = 'pt-PT', int $page = 1): array
     {
         return $this->get("/movie/{$tmdbMovieId}/recommendations", [

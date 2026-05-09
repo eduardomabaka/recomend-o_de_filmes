@@ -23,7 +23,12 @@
   } @else {
     <div class="grid">
       @for (m of data.results; track m.id) {
-        <app-movie-card [movie]="m" />
+        <app-movie-card
+          [movie]="m"
+          [showFavoriteButton]="auth.isLoggedIn()"
+          [favorite]="favoriteIds().includes(m.id)"
+          (favoriteToggle)="onFavoriteToggle(m)"
+        />
       }
     </div>
     @if (!auth.isLoggedIn()) {

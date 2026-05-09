@@ -1,8 +1,31 @@
-<section class="card">
-  <h2>Favoritos</h2>
-  <p>
-    Esta página vai listar os seus favoritos guardados no backend. Para funcionar com sessão (cookies),
-    o ideal é usar proxy no Angular ou servir o frontend no mesmo host/porta do backend.
-  </p>
+<section class="favorites-shell">
+  <header class="favorites-header">
+    <div>
+      <h2>Favoritos</h2>
+      <p>Os filmes que guardou com o coração. Toque no coração para remover da lista.</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="status">A carregar favoritos…</div>
+  } @else if (error()) {
+    <div class="status status-error">{{ error() }}</div>
+  } @else if (favorites().length === 0) {
+    <div class="status">Ainda não há favoritos guardados.</div>
+  } @else {
+    <div class="grid">
+      @for (m of favorites(); track m.id) {
+        <div class="favorite-card" [class.removing]="isRemoving(m.id)">
+          <app-movie-card
+            [movie]="m"
+            [showFavoriteButton]="true"
+            [favorite]="true"
+            (movieClick)="onMovieClick($event)"
+            (favoriteToggle)="onFavoriteToggle($event)"
+          />
+        </div>
+      }
+    </div>
+  }
 </section>
 

@@ -1,55 +1,80 @@
-<div class="dialog-content">
-  <div class="movie-header">
-    <img [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w342' + movie.poster_path : null" [alt]="movie.title" class="poster" />
-    <div class="info">
-      <h2>{{ movie.title }}</h2>
-      <p>{{ movie.release_date | date:'dd/MM/yyyy' }}</p>
-      <p>{{ movie.vote_average | number:'1.1-1' }}/10</p>
-      <p>{{ movie.overview }}</p>
-    </div>
-  </div>
-
-  @if (details$ | async; as details) {
-    <div class="details">
-      <h3>Detalhes</h3>
-      <p><strong>Gêneros:</strong> {{ details.genres ? details.genres.map(g => g.name).join(', ') : 'N/A' }}</p>
-      <p><strong>Duração:</strong> {{ details.runtime }} min</p>
-      <p><strong>Orçamento:</strong> ${{ details.budget | number }}</p>
-      <p><strong>Receita:</strong> ${{ details.revenue | number }}</p>
-    </div>
-  }
-
-  @if (providers$ | async; as providers) {
-    <div class="providers">
-      <h3>Onde Assistir</h3>
-      @if (providers?.error) {
-        <p class="muted">{{ providers.error }}</p>
-      } @else if (watchSections().length === 0) {
-        <p class="muted">Sem plataformas disponíveis para esta região.</p>
-      } @else {
-        @for (section of watchSections(); track section.title) {
-          <div class="section">
-            <h4>{{ section.title }}</h4>
-            <div class="logos">
-              @for (p of section.items; track p.provider_id) {
-                <div class="provider">
-                  @if (p.logo_path) {
-                    <img [src]="'https://image.tmdb.org/t/p/w92' + p.logo_path" [alt]="p.provider_name" />
-                  }
-                  <span>{{ p.provider_name }}</span>
-                </div>
-              }
-            </div>
+<div class="dialog-shell">
+  @if (movieDetails(); as details) {
+    <header class="dialog-header">
+      <div>
+        <p class="movie-tagline">{{ details.tagline || 'Ficha do filme' }}</p>
+        <h2>{{ details.title }}</h2>
+        <div class="meta-row">
+          <span>{{ details.release_date || '—' }}</span>
+          <span class="dot">•</span>
+          <span>{{ details.runtime ? details.runtime + 'm' : '—' }}</span>
+          <span class="dot">•</span>
+          <span>{{ details.vote_average?.toFixed(1) ?? '—' }}</span>
+        </div>
+        @if (details.genres?.length) {
+          <div class="genres">
+            {{ details.genres ? details.genres.map((g) => g.name).join(', ') : '' }}
           </div>
         }
-        @if (providerLink(); as link) {
-          <a class="provider-link" [href]="link" target="_blank" rel="noopener noreferrer">
-            Ver todas as opções no TMDB
-          </a>
-        }
-      }
-    </div>
-  }
+      </div>
+      <button type="button" class="close-btn" (click)="close()">Fechar</button>
+    </header>
 
-  <button mat-button (click)="close()">Fechar</button>
+    <div class="dialog-grid">
+      <div class="poster-panel">
+        @if (details.poster_path) {
+          <img
+            src="https://image.tmdb.org/t/p/w342{{ details.poster_path }}"
+            [alt]="details.title"
+            loading="lazy"
+          />
+        } @else {
+          <div class="poster-fallback">Sem poster disponível</div>
+        }
+      </div>
+
+      <div class="details-panel">
+        <div class="section">
+          <h3>Sinopse</h3>
+          <p>{{ details.overview || 'Não há descrição disponível para este filme.' }}</p>
+        </div>
+
+        <div class="section">
+          <h3>Onde encontrar</h3>
+          @if (topProviders().length) {
+            <div class="platforms-grid">
+              @for (provider of topProviders(); track provider.provider_id) {
+                <a
+                  class="platform-tile"
+                  [href]="providerLink() || '#'"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  title="Ver {{ provider.provider_name }}"
+                >
+                  @if (provider.logo_path) {
+                    <img
+                      src="https://image.tmdb.org/t/p/w92{{ provider.logo_path }}"
+                      [alt]="provider.provider_name"
+                    />
+                  }
+                  <span>{{ provider.provider_name }}</span>
+                </a>
+              }
+            </div>
+            @if (providerLink()) {
+              <p class="watch-link">
+                <a [href]="providerLink()" target="_blank" rel="noreferrer noopener">
+                  Ver todas as opções no TMDB
+                </a>
+              </p>
+            }
+          } @else {
+            <p class="empty-state">Não foi possível obter os sites de streaming para este filme.</p>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="loading">A carregar informações do filme…</div>
+  }
 </div>

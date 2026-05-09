@@ -3,6 +3,7 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  position: relative;
   border-radius: 14px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -10,6 +11,7 @@
   text-decoration: none;
   transition: transform 0.12s ease, background 0.12s ease;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  max-width: 250px;
 }
 
 .card:hover {
@@ -74,4 +76,109 @@ img {
 
 .dot {
   opacity: 0.6;
+}
+
+.favorite-heart {
+  position: absolute;
+  right: 0.45rem;
+  top: 0.45rem;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(14, 18, 34, 0.58);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  color: rgba(230, 233, 242, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 2;
+  transition:
+    transform 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease;
+
+  svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: currentColor;
+    stroke: rgba(255, 255, 255, 0.28);
+    stroke-width: 1;
+  }
+
+  &[aria-pressed='true'] {
+    color: #ff3b81;
+    border-color: rgba(255, 59, 129, 0.42);
+    background: rgba(124, 58, 237, 0.24);
+  }
+
+  &:hover {
+    transform: scale(1.06);
+    color: rgba(255, 255, 255, 0.92);
+  }
+}
+
+.reco-heart {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(14, 18, 34, 0.58);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  color: rgba(230, 233, 242, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 2;
+  transition:
+    transform 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease;
+
+  svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: currentColor;
+    stroke: rgba(255, 255, 255, 0.28);
+    stroke-width: 1;
+  }
+
+  &[aria-pressed='true'] {
+    color: #ff3b81;
+    border-color: rgba(255, 59, 129, 0.42);
+    background: rgba(124, 58, 237, 0.24);
+  }
+
+  &:hover {
+    transform: scale(1.06);
+    color: rgba(255, 255, 255, 0.92);
+  }
+}
+
+:root[data-theme='light'] .reco-heart {
+  border-color: rgba(32, 38, 55, 0.18);
+  background: rgba(251, 252, 254, 0.72);
+}
+
+:root[data-theme='light'] .favorite-heart {
+  border-color: rgba(32, 38, 55, 0.18);
+  background: rgba(251, 252, 254, 0.72);
+}
+
+@media (max-width: 460px) {
+  .reco-heart {
+    bottom: 0.4rem;
+    width: 2rem;
+    height: 2rem;
+
+    svg {
+      width: 0.95rem;
+      height: 0.95rem;
+    }
+  }
 }

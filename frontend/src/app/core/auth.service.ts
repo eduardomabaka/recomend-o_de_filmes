@@ -2,7 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { API_BASE_URL, getApiBaseCandidates } from './api.config';
-import type { AuthUser } from './api.types';
+import type { AuthUser, QuizPayload } from './api.types';
 
 type MeResponse = { user: AuthUser };
 type AuthResponse = { user?: AuthUser; error?: string };
@@ -81,7 +81,12 @@ export class AuthService {
     );
   }
 
-  register(body: { name: string; email: string; password: string }): Observable<AuthResponse> {
+  register(body: {
+    name: string;
+    email: string;
+    password: string;
+    quiz: QuizPayload;
+  }): Observable<AuthResponse> {
     return this.requestWithFallback<AuthResponse>('/api/auth/register', 'post', body).pipe(
       catchError((error) => of({ error: this.errorMessage(error) }))
     );
@@ -139,16 +144,27 @@ export class AuthService {
   }
 
   private errorMessage(error: unknown): string {
-    if (typeof error === 'object' && error !== null && 'error' in error) {
-      const payload = (error as { error?: unknown }).error;
-      if (typeof payload === 'object' && payload !== null && 'error' in payload) {
-        const message = (payload as { error?: unknown }).error;
-        if (typeof message === 'string' && message.trim() !== '') {
-          return message;
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) {
+        return 'Sem ligação ao servidor. Confirme que o Apache está ligado em XAMPP e que pode aceder ao backend.';
+      }
+
+      const raw = error.error;
+      if (typeof raw === 'object' && raw !== null && 'error' in raw) {
+        const msg = (raw as { error?: unknown }).error;
+        if (typeof msg === 'string' && msg.trim() !== '') {
+          return msg;
         }
       }
+
+      const text = typeof raw === 'string' ? raw.replace(/<[^>]+>/g, ' ').trim() : '';
+      if (text.length > 15 && text.length < 320) {
+        return text.slice(0, 220);
+      }
+
+      return `O servidor devolveu erro ${error.status}.`;
     }
 
-    return 'Não foi possível contactar a API.';
+    return 'Ocorreu um erro inesperado ao comunicar com a API.';
   }
 }

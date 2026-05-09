@@ -94,6 +94,14 @@ if ($method === 'POST' && $path === '/api/auth/register') {
     $result = MovieController::popular($_GET);
 } elseif ($method === 'GET' && $path === '/api/movies/search') {
     $result = MovieController::search($_GET);
+} elseif ($method === 'GET' && $path === '/api/movies/genres') {
+    $result = MovieController::genres($_GET);
+} elseif ($method === 'GET' && $path === '/api/movies/recommendation-pick') {
+    $result = MovieController::getRecommendationPick($_GET);
+} elseif ($method === 'POST' && $path === '/api/movies/recommendation-pick') {
+    $result = MovieController::upsertRecommendationPick(jsonBody());
+} elseif ($method === 'DELETE' && $path === '/api/movies/recommendation-pick') {
+    $result = MovieController::clearRecommendationPick($_GET);
 } elseif ($method === 'GET' && $path === '/api/movies/recommendations') {
     $result = MovieController::recommendations($_GET);
 } elseif ($method === 'GET' && $path === '/api/movies/details') {
@@ -104,6 +112,8 @@ if ($method === 'POST' && $path === '/api/auth/register') {
     $result = MovieController::listFavorites();
 } elseif ($method === 'POST' && $path === '/api/movies/favorites') {
     $result = MovieController::addFavorite(jsonBody());
+} elseif ($method === 'POST' && $path === '/api/movies/toggle-favorite') {
+    $result = MovieController::toggleFavorite(jsonBody());
 } elseif ($method === 'DELETE' && $path === '/api/movies/favorites') {
     $result = MovieController::removeFavorite($_GET);
 } else {

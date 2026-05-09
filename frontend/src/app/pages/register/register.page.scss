@@ -56,3 +56,80 @@ button:disabled {
   color: #ff8fb8;
   font-size: 0.92rem;
 }
+
+.stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.pill {
+  font-size: 0.76rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.pill.active {
+  border-color: var(--border-accent);
+  color: var(--text-strong);
+  background: var(--surface-accent);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.actions button {
+  flex: 1 1 140px;
+}
+
+.actions .btn-secondary {
+  background: var(--surface-strong);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+}
+
+.quiz-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.quiz-lead {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
+select {
+  font: inherit;
+  width: 100%;
+  background: var(--surface-strong);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+}
+
+.summary .muted {
+  margin: 0 0 0.65rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.bullets {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.bullets li {
+  margin-bottom: 0.35rem;
+}

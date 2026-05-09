@@ -16,10 +16,12 @@ export type TmdbMovie = {
   backdrop_path?: string | null;
   release_date?: string;
   vote_average?: number;
+  genre_ids?: number[];
 };
 
 export type TmdbMovieDetails = TmdbMovie & {
   genres?: { id: number; name: string }[];
+  tagline?: string;
   runtime?: number;
   budget?: number;
   revenue?: number;
@@ -49,5 +51,21 @@ export type AuthUser = {
   name: string;
   email: string;
   created_at?: string;
+  favorite_genre_id?: number | null;
+  worst_genre_id?: number | null;
+  quiz_answer_2?: string | null;
+  quiz_answer_3?: string | null;
+};
+
+export type TmdbGenre = {
+  id: number;
+  name: string;
+};
+
+export type QuizPayload = {
+  favorite_genre_id: number;
+  worst_genre_id: number;
+  quiz_answer_2: string;
+  quiz_answer_3: string;
 };
 

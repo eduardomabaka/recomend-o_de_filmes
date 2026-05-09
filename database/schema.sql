@@ -6,7 +6,22 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(120) NOT NULL,
   email VARCHAR(190) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
+  favorite_genre_id SMALLINT UNSIGNED NULL DEFAULT NULL,
+  worst_genre_id SMALLINT UNSIGNED NULL DEFAULT NULL,
+  quiz_answer_2 VARCHAR(160) NULL DEFAULT NULL,
+  quiz_answer_3 VARCHAR(160) NULL DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS recommendation_picks (
+  user_id INT NOT NULL,
+  source_tmdb_movie_id INT NOT NULL,
+  picked_tmdb_movie_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, source_tmdb_movie_id),
+  CONSTRAINT fk_recommendation_pick_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS favorites (

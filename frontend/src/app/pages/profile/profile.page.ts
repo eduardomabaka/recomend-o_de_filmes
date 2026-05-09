@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth.service';
 
@@ -15,8 +15,10 @@ export class ProfilePage implements OnInit {
   password = '';
   confirmPassword = '';
   error = signal('');
-  success = signal('');
   loading = signal(false);
+
+  editingOverlay = signal(false);
+  saveBanner = signal('');
 
   constructor(protected readonly auth: AuthService) {}
 
@@ -37,9 +39,35 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  protected openEditOverlay(): void {
+    this.error.set('');
+    this.saveBanner.set('');
+    this.editingOverlay.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  protected cancelEdit(): void {
+    const user = this.auth.user();
+    if (user) {
+      this.name = user.name;
+      this.email = user.email;
+    }
+    this.password = '';
+    this.confirmPassword = '';
+    this.editingOverlay.set(false);
+    this.error.set('');
+    document.body.style.overflow = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  protected onEscape(): void {
+    if (this.editingOverlay()) {
+      this.cancelEdit();
+    }
+  }
+
   submit(): void {
     this.error.set('');
-    this.success.set('');
 
     if (!this.name.trim() || !this.email.trim()) {
       this.error.set('Preencha o nome e o email.');
@@ -73,7 +101,9 @@ export class ProfilePage implements OnInit {
 
         this.password = '';
         this.confirmPassword = '';
-        this.success.set('Perfil atualizado com sucesso.');
+        this.saveBanner.set('Perfil atualizado com sucesso.');
+        document.body.style.overflow = '';
+        this.editingOverlay.set(false);
       });
   }
 }

@@ -1,4 +1,32 @@
 <div class="card" (click)="onClick()">
+  @if (showFavoriteIcon()) {
+    <button
+      type="button"
+      class="favorite-heart"
+      [attr.aria-pressed]="favoriteHeartActive()"
+      [title]="favoriteHeartActive() ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
+      (click)="onFavoriteHeart($event)"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.02 4.36 2.61C11.54 5.02 13.21 4 14.96 4 17.5 4 19.5 6 19.5 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </button>
+  }
+
+  @if (showRecommendationFavorite()) {
+    <button
+      type="button"
+      class="reco-heart"
+      [attr.aria-pressed]="recommendationHeartActive()"
+      [title]="recommendationHeartActive() ? 'Retirar como recomendação favorita' : 'Marcar como recomendação favorita'"
+      (click)="onRecommendationHeart($event)"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.02 4.36 2.61C11.54 5.02 13.21 4 14.96 4 17.5 4 19.5 6 19.5 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </button>
+  }
+
   <div class="poster">
     @if (posterUrl(); as url) {
       <img [src]="url" [alt]="movie.title" loading="lazy" />
