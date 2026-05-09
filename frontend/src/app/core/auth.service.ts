@@ -1,7 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of } from 'rxjs';
-import { API_BASE_URL } from './api.config';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
+import { API_BASE_URL, getApiBaseCandidates } from './api.config';
 import type { AuthUser } from './api.types';
 
 type MeResponse = { user: AuthUser };
@@ -9,6 +9,7 @@ type AuthResponse = { user?: AuthUser; error?: string };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly preferredBaseUrlStorageKey = 'api_base_url_preference';
   private readonly userSignal = signal<AuthUser | null>(null);
 
   readonly user = this.userSignal.asReadonly();
@@ -16,8 +17,60 @@ export class AuthService {
 
   constructor(private readonly http: HttpClient) {}
 
+  private getBaseUrlCandidates(): string[] {
+    if (typeof window === 'undefined') {
+      return [API_BASE_URL];
+    }
+
+    const saved = window.localStorage.getItem(this.preferredBaseUrlStorageKey);
+    const candidates = getApiBaseCandidates();
+    if (!saved || !candidates.includes(saved)) {
+      return candidates;
+    }
+
+    return [saved, ...candidates.filter((url) => url !== saved)];
+  }
+
+  private rememberWorkingBaseUrl(baseUrl: string): void {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(this.preferredBaseUrlStorageKey, baseUrl);
+    }
+  }
+
+  private requestWithFallback<T>(
+    path: string,
+    method: 'get' | 'post',
+    body?: unknown
+  ): Observable<T> {
+    const baseUrls = this.getBaseUrlCandidates();
+
+    const attempt = (index: number): Observable<T> => {
+      const baseUrl = baseUrls[index];
+      const url = `${baseUrl}${path}`;
+      const request$ =
+        method === 'get'
+          ? this.http.get<T>(url, { withCredentials: true })
+          : this.http.post<T>(url, body ?? {});
+
+      return request$.pipe(
+        switchMap((result) => {
+          this.rememberWorkingBaseUrl(baseUrl);
+          return of(result);
+        }),
+        catchError((error) => {
+          if (error instanceof HttpErrorResponse && error.status === 0 && index < baseUrls.length - 1) {
+            return attempt(index + 1);
+          }
+          throw error;
+        })
+      );
+    };
+
+    return attempt(0);
+  }
+
   login(body: { email: string; password: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${API_BASE_URL}/api/auth/login`, body).pipe(
+    return this.requestWithFallback<AuthResponse>('/api/auth/login', 'post', body).pipe(
       map((res) => {
         if (res?.user) {
           this.userSignal.set(res.user);
@@ -29,7 +82,7 @@ export class AuthService {
   }
 
   register(body: { name: string; email: string; password: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${API_BASE_URL}/api/auth/register`, body).pipe(
+    return this.requestWithFallback<AuthResponse>('/api/auth/register', 'post', body).pipe(
       map((res) => {
         if (res?.user) {
           this.userSignal.set(res.user);
@@ -42,7 +95,7 @@ export class AuthService {
 
   /** Atualiza o utilizador em memória e devolve se existe sessão válida. */
   checkSession(): Observable<boolean> {
-    return this.http.get<MeResponse>(`${API_BASE_URL}/api/auth/me`, { withCredentials: true }).pipe(
+    return this.requestWithFallback<MeResponse>('/api/auth/me', 'get').pipe(
       map((res) => {
         if (res?.user) {
           this.userSignal.set(res.user);

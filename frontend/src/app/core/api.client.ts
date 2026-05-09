@@ -1,12 +1,78 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { API_BASE_URL } from './api.config';
+import { API_BASE_URL, getApiBaseCandidates } from './api.config';
 import type { ApiResult } from './api.types';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, of, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiClient {
+  private readonly preferredBaseUrlStorageKey = 'api_base_url_preference';
+
   constructor(private readonly http: HttpClient) {}
+
+  private getBaseUrlCandidates(): string[] {
+    if (typeof window === 'undefined') {
+      return [API_BASE_URL];
+    }
+
+    const saved = window.localStorage.getItem(this.preferredBaseUrlStorageKey);
+    const candidates = getApiBaseCandidates();
+    if (!saved || !candidates.includes(saved)) {
+      return candidates;
+    }
+
+    return [saved, ...candidates.filter((url) => url !== saved)];
+  }
+
+  private rememberWorkingBaseUrl(baseUrl: string): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    window.localStorage.setItem(this.preferredBaseUrlStorageKey, baseUrl);
+  }
+
+  private canRetryWithNextBase(error: unknown, currentIndex: number, total: number): boolean {
+    return (
+      error instanceof HttpErrorResponse &&
+      currentIndex < total - 1 &&
+      (error.status === 0 || (error.status >= 200 && error.status < 300))
+    );
+  }
+
+  private requestWithFallback<T>(
+    method: 'get' | 'post' | 'delete',
+    path: string,
+    options: { params?: HttpParams; body?: unknown }
+  ): Observable<ApiResult<T>> {
+    const baseUrls = this.getBaseUrlCandidates();
+
+    const attempt = (index: number): Observable<ApiResult<T>> => {
+      const baseUrl = baseUrls[index];
+      const url = `${baseUrl}${path}`;
+
+      const request$ =
+        method === 'get'
+          ? this.http.get<ApiResult<T>>(url, { params: options.params })
+          : method === 'post'
+            ? this.http.post<ApiResult<T>>(url, options.body ?? {})
+            : this.http.delete<ApiResult<T>>(url, { params: options.params });
+
+      return request$.pipe(
+        switchMap((result) => {
+          this.rememberWorkingBaseUrl(baseUrl);
+          return of(result);
+        }),
+        catchError((error) => {
+          if (this.canRetryWithNextBase(error, index, baseUrls.length)) {
+            return attempt(index + 1);
+          }
+          return this.mapHttpError<T>(error);
+        })
+      );
+    };
+
+    return attempt(0);
+  }
 
   private mapHttpError<T>(error: unknown): Observable<ApiResult<T>> {
     if (error instanceof HttpErrorResponse) {
@@ -26,7 +92,7 @@ export class ApiClient {
         'name' in error.error &&
         (error.error as { name?: unknown }).name === 'SyntaxError';
 
-      if (isLikelyJsonParseError && error.status >= 200 && error.status < 300) {
+      if ((isLikelyJsonParseError || !backendMessage) && error.status >= 200 && error.status < 300) {
         return of({
           error: 'Resposta inválida da API. Verifique se a URL da API está correta.'
         } as ApiResult<T>);
@@ -51,11 +117,11 @@ export class ApiClient {
         params = params.set(k, String(v));
       }
     }
-    return this.http.get<ApiResult<T>>(`${API_BASE_URL}${path}`, { params }).pipe(catchError((error) => this.mapHttpError<T>(error)));
+    return this.requestWithFallback<T>('get', path, { params });
   }
 
   post<T>(path: string, body?: unknown) {
-    return this.http.post<ApiResult<T>>(`${API_BASE_URL}${path}`, body ?? {}).pipe(catchError((error) => this.mapHttpError<T>(error)));
+    return this.requestWithFallback<T>('post', path, { body });
   }
 
   delete<T>(path: string, query?: Record<string, string | number | boolean | undefined | null>) {
@@ -66,7 +132,6 @@ export class ApiClient {
         params = params.set(k, String(v));
       }
     }
-    return this.http.delete<ApiResult<T>>(`${API_BASE_URL}${path}`, { params }).pipe(catchError((error) => this.mapHttpError<T>(error)));
+    return this.requestWithFallback<T>('delete', path, { params });
   }
 }
-
