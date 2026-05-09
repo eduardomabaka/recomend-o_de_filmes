@@ -52,10 +52,10 @@ export class ApiClient {
 
       const request$ =
         method === 'get'
-          ? this.http.get<ApiResult<T>>(url, { params: options.params })
+          ? this.http.get<ApiResult<T>>(url, { params: options.params, withCredentials: true })
           : method === 'post'
-            ? this.http.post<ApiResult<T>>(url, options.body ?? {})
-            : this.http.delete<ApiResult<T>>(url, { params: options.params });
+            ? this.http.post<ApiResult<T>>(url, options.body ?? {}, { withCredentials: true })
+            : this.http.delete<ApiResult<T>>(url, { params: options.params, withCredentials: true });
 
       return request$.pipe(
         switchMap((result) => {

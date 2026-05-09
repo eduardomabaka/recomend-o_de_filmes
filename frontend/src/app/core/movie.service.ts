@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiClient } from './api.client';
-import type { TmdbMovie, TmdbPagedResponse } from './api.types';
+import type { TmdbMovie, TmdbPagedResponse, TmdbMovieDetails, TmdbWatchProvidersResponse } from './api.types';
 
 @Injectable({ providedIn: 'root' })
 export class MovieService {
@@ -16,6 +16,14 @@ export class MovieService {
 
   recommendations(params: { movieId: number; lang?: string; page?: number }) {
     return this.api.get<TmdbPagedResponse<TmdbMovie>>('/api/movies/recommendations', params);
+  }
+
+  details(params: { movieId: number; lang?: string }) {
+    return this.api.get<TmdbMovieDetails>('/api/movies/details', params);
+  }
+
+  watchProviders(params: { movieId: number }) {
+    return this.api.get<TmdbWatchProvidersResponse>('/api/movies/watch-providers', params);
   }
 }
 

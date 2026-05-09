@@ -4,11 +4,13 @@
       <img class="brand-logo" src="favicon.svg" width="40" height="40" alt="" />
     </a>
     <nav class="nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Início</a>
       <a routerLink="/popular" routerLinkActive="active">Populares</a>
       @if (auth.isLoggedIn()) {
+        <a routerLink="/profile" routerLinkActive="active">Perfil</a>
         <a routerLink="/search" routerLinkActive="active">Pesquisar</a>
         <a routerLink="/favorites" routerLinkActive="active">Favoritos</a>
+      } @else {
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Início</a>
       }
     </nav>
     <nav class="auth">
@@ -25,8 +27,12 @@
         </span>
         <span class="theme-toggle-label">{{ theme.mode() === 'dark' ? 'Dark' : 'Light' }}</span>
       </button>
-      <a routerLink="/login" routerLinkActive="active">Entrar</a>
-      <a class="btn" routerLink="/register">Criar conta</a>
+      @if (auth.isLoggedIn()) {
+        <button class="logout-btn" type="button" (click)="logout()">Sair</button>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active">Entrar</a>
+        <a class="btn" routerLink="/register">Criar conta</a>
+      }
     </nav>
   </header>
 

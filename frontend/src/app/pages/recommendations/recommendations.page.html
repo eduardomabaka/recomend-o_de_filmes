@@ -26,7 +26,7 @@
     } @else {
       <div class="grid">
         @for (m of data.results; track m.id) {
-          <app-movie-card [movie]="m" />
+          <app-movie-card [movie]="m" (movieClick)="onMovieClick($event)" />
         }
       </div>
     }

@@ -18,6 +18,32 @@ export type TmdbMovie = {
   vote_average?: number;
 };
 
+export type TmdbMovieDetails = TmdbMovie & {
+  genres?: { id: number; name: string }[];
+  runtime?: number;
+  budget?: number;
+  revenue?: number;
+};
+
+export type TmdbWatchProvider = {
+  provider_id: number;
+  provider_name: string;
+  logo_path?: string | null;
+};
+
+export type TmdbWatchProviderCountry = {
+  link?: string;
+  flatrate?: TmdbWatchProvider[];
+  rent?: TmdbWatchProvider[];
+  buy?: TmdbWatchProvider[];
+};
+
+export type TmdbWatchProvidersResponse = {
+  id: number;
+  results?: Record<string, TmdbWatchProviderCountry>;
+  error?: string;
+};
+
 export type AuthUser = {
   id: number;
   name: string;

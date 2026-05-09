@@ -1,8 +1,11 @@
 import { Component, computed, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '../../core/movie.service';
 import { MovieCardComponent } from '../../shared/movie-card/movie-card.component';
+import { MovieDetailsDialog } from '../../shared/movie-details-dialog/movie-details-dialog';
+import type { TmdbMovie } from '../../core/api.types';
 
 @Component({
   selector: 'app-recommendations-page',
@@ -24,7 +27,8 @@ export class RecommendationsPage {
 
   constructor(
     route: ActivatedRoute,
-    private readonly movies: MovieService
+    private readonly movies: MovieService,
+    private readonly dialog: MatDialog
   ) {
     const id = Number(route.snapshot.paramMap.get('id') ?? 0);
     this.movieId.set(Number.isFinite(id) ? id : 0);
@@ -36,6 +40,14 @@ export class RecommendationsPage {
 
   prev() {
     this.page.update((p) => Math.max(1, p - 1));
+  }
+
+  onMovieClick(movie: TmdbMovie) {
+    this.dialog.open(MovieDetailsDialog, {
+      data: { movie },
+      width: '80vw',
+      maxWidth: '800px'
+    });
   }
 }
 

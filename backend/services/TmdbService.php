@@ -43,6 +43,18 @@ final class TmdbService
         ]);
     }
 
+    public function getMovieDetails(int $tmdbMovieId, string $language = 'pt-PT'): array
+    {
+        return $this->get("/movie/{$tmdbMovieId}", [
+            'language' => $language,
+        ]);
+    }
+
+    public function getWatchProviders(int $tmdbMovieId): array
+    {
+        return $this->get("/movie/{$tmdbMovieId}/watch/providers", []);
+    }
+
     private function get(string $path, array $query): array
     {
         if ($this->apiKey === '' && $this->readAccessToken === '') {

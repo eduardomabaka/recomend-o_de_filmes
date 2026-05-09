@@ -39,7 +39,7 @@ export class LoginPage {
         return;
       }
 
-      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/popular';
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/profile';
       this.router.navigateByUrl(returnUrl);
     });
   }

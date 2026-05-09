@@ -1,4 +1,4 @@
-<a class="card" [routerLink]="['/movie', movie.id, 'recommendations']">
+<div class="card" (click)="onClick()">
   <div class="poster">
     @if (posterUrl(); as url) {
       <img [src]="url" [alt]="movie.title" loading="lazy" />
@@ -15,4 +15,4 @@
       <span>{{ movie.vote_average?.toFixed?.(1) ?? '—' }}</span>
     </div>
   </div>
-</a>
+</div>

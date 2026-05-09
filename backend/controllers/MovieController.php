@@ -44,6 +44,30 @@ final class MovieController
         return ['status' => 200, 'data' => $tmdb->getRecommendations($mid, $lang, $page)];
     }
 
+    public static function details(array $query): array
+    {
+        $mid = (int)($query['movieId'] ?? 0);
+        if ($mid <= 0) {
+            return ['status' => 422, 'data' => ['error' => 'movieId é obrigatório.']];
+        }
+
+        $lang = (string)($query['lang'] ?? 'pt-PT');
+
+        $tmdb = new TmdbService();
+        return ['status' => 200, 'data' => $tmdb->getMovieDetails($mid, $lang)];
+    }
+
+    public static function watchProviders(array $query): array
+    {
+        $mid = (int)($query['movieId'] ?? 0);
+        if ($mid <= 0) {
+            return ['status' => 422, 'data' => ['error' => 'movieId é obrigatório.']];
+        }
+
+        $tmdb = new TmdbService();
+        return ['status' => 200, 'data' => $tmdb->getWatchProviders($mid)];
+    }
+
     public static function listFavorites(): array
     {
         $uid = (int)($_SESSION['user_id'] ?? 0);

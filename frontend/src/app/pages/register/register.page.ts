@@ -41,7 +41,7 @@ export class RegisterPage {
           return;
         }
 
-        this.router.navigateByUrl('/popular');
+        this.router.navigateByUrl('/login');
       });
   }
 }

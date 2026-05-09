@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth.service';
 import { ThemeService } from './core/theme.service';
 
@@ -14,11 +14,18 @@ export class App implements OnInit {
 
   constructor(
     protected readonly auth: AuthService,
-    protected readonly theme: ThemeService
+    protected readonly theme: ThemeService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
     this.theme.init();
     this.auth.refresh();
+  }
+
+  protected logout(): void {
+    this.auth.logout().subscribe(() => {
+      this.router.navigateByUrl('/login');
+    });
   }
 }

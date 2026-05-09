@@ -50,7 +50,7 @@ export class AuthService {
       const request$ =
         method === 'get'
           ? this.http.get<T>(url, { withCredentials: true })
-          : this.http.post<T>(url, body ?? {});
+          : this.http.post<T>(url, body ?? {}, { withCredentials: true });
 
       return request$.pipe(
         switchMap((result) => {
@@ -83,6 +83,12 @@ export class AuthService {
 
   register(body: { name: string; email: string; password: string }): Observable<AuthResponse> {
     return this.requestWithFallback<AuthResponse>('/api/auth/register', 'post', body).pipe(
+      catchError((error) => of({ error: this.errorMessage(error) }))
+    );
+  }
+
+  updateProfile(body: { name: string; email: string; password?: string }): Observable<AuthResponse> {
+    return this.requestWithFallback<AuthResponse>('/api/auth/profile', 'post', body).pipe(
       map((res) => {
         if (res?.user) {
           this.userSignal.set(res.user);
@@ -90,6 +96,19 @@ export class AuthService {
         return res;
       }),
       catchError((error) => of({ error: this.errorMessage(error) }))
+    );
+  }
+
+  logout(): Observable<{ ok?: boolean; error?: string }> {
+    return this.requestWithFallback<{ ok?: boolean; error?: string }>('/api/auth/logout', 'post').pipe(
+      map((res) => {
+        this.userSignal.set(null);
+        return res;
+      }),
+      catchError((error) => {
+        this.userSignal.set(null);
+        return of({ error: this.errorMessage(error) });
+      })
     );
   }
 

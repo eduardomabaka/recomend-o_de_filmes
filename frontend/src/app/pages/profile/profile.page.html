@@ -1,0 +1,64 @@
+<section class="profile-layout">
+  <aside class="profile-summary">
+    <h1>Perfil</h1>
+    @if (auth.user(); as user) {
+      <dl>
+        <div>
+          <dt>Nome</dt>
+          <dd>{{ user.name }}</dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd>{{ user.email }}</dd>
+        </div>
+        <div>
+          <dt>ID</dt>
+          <dd>#{{ user.id }}</dd>
+        </div>
+      </dl>
+    }
+  </aside>
+
+  <section class="profile-form">
+    <h2>Editar dados</h2>
+
+    <form (submit)="$event.preventDefault(); submit()">
+      <label>
+        <span>Nome</span>
+        <input [(ngModel)]="name" name="name" autocomplete="name" />
+      </label>
+
+      <label>
+        <span>Email</span>
+        <input [(ngModel)]="email" name="email" type="email" autocomplete="email" />
+      </label>
+
+      <label>
+        <span>Nova palavra-passe</span>
+        <input [(ngModel)]="password" name="password" type="password" autocomplete="new-password" />
+      </label>
+
+      <label>
+        <span>Confirmar palavra-passe</span>
+        <input
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+        />
+      </label>
+
+      @if (error()) {
+        <p class="form-error">{{ error() }}</p>
+      }
+
+      @if (success()) {
+        <p class="form-success">{{ success() }}</p>
+      }
+
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'A guardar...' : 'Guardar alterações' }}
+      </button>
+    </form>
+  </section>
+</section>

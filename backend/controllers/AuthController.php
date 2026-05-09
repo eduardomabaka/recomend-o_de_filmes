@@ -21,7 +21,6 @@ final class AuthController
         }
 
         $userId = User::create($name, $email, $password);
-        $_SESSION['user_id'] = $userId;
 
         return ['status' => 201, 'data' => ['user' => User::findById($userId)]];
     }
@@ -61,5 +60,35 @@ final class AuthController
         }
         return ['status' => 200, 'data' => ['user' => User::findById($uid)]];
     }
-}
 
+    public static function updateProfile(array $body): array
+    {
+        $uid = (int)($_SESSION['user_id'] ?? 0);
+        if ($uid <= 0) {
+            return ['status' => 401, 'data' => ['error' => 'Não autenticado.']];
+        }
+
+        $name = trim((string)($body['name'] ?? ''));
+        $email = trim((string)($body['email'] ?? ''));
+        $password = (string)($body['password'] ?? '');
+
+        if ($name === '' || $email === '') {
+            return ['status' => 422, 'data' => ['error' => 'Nome e email são obrigatórios.']];
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return ['status' => 422, 'data' => ['error' => 'Email inválido.']];
+        }
+
+        if ($password !== '' && strlen($password) < 6) {
+            return ['status' => 422, 'data' => ['error' => 'A nova palavra-passe deve ter pelo menos 6 caracteres.']];
+        }
+
+        if (User::emailExistsForAnotherUser($email, $uid)) {
+            return ['status' => 409, 'data' => ['error' => 'Email já registado por outro utilizador.']];
+        }
+
+        User::updateProfile($uid, $name, $email, $password !== '' ? $password : null);
+        return ['status' => 200, 'data' => ['user' => User::findById($uid)]];
+    }
+}

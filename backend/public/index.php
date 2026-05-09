@@ -86,6 +86,8 @@ if ($method === 'POST' && $path === '/api/auth/register') {
     $result = AuthController::login(jsonBody());
 } elseif ($method === 'POST' && $path === '/api/auth/logout') {
     $result = AuthController::logout();
+} elseif ($method === 'POST' && $path === '/api/auth/profile') {
+    $result = AuthController::updateProfile(jsonBody());
 } elseif ($method === 'GET' && $path === '/api/auth/me') {
     $result = AuthController::me();
 } elseif ($method === 'GET' && $path === '/api/movies/popular') {
@@ -94,6 +96,10 @@ if ($method === 'POST' && $path === '/api/auth/register') {
     $result = MovieController::search($_GET);
 } elseif ($method === 'GET' && $path === '/api/movies/recommendations') {
     $result = MovieController::recommendations($_GET);
+} elseif ($method === 'GET' && $path === '/api/movies/details') {
+    $result = MovieController::details($_GET);
+} elseif ($method === 'GET' && $path === '/api/movies/watch-providers') {
+    $result = MovieController::watchProviders($_GET);
 } elseif ($method === 'GET' && $path === '/api/movies/favorites') {
     $result = MovieController::listFavorites();
 } elseif ($method === 'POST' && $path === '/api/movies/favorites') {
@@ -106,4 +112,3 @@ if ($method === 'POST' && $path === '/api/auth/register') {
 
 http_response_code((int)($result['status'] ?? 200));
 echo json_encode($result['data'] ?? [], JSON_UNESCAPED_UNICODE);
-

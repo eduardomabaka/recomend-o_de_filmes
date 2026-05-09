@@ -7,6 +7,7 @@ import { RecommendationsPage } from './pages/recommendations/recommendations.pag
 import { LoginPage } from './pages/login/login.page';
 import { RegisterPage } from './pages/register/register.page';
 import { FavoritesPage } from './pages/favorites/favorites.page';
+import { ProfilePage } from './pages/profile/profile.page';
 
 export const routes: Routes = [
   {
@@ -37,6 +38,11 @@ export const routes: Routes = [
   {
     path: 'favorites',
     component: FavoritesPage,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'profile',
+    component: ProfilePage,
     canActivate: [authGuard]
   },
   { path: '**', redirectTo: '' }
