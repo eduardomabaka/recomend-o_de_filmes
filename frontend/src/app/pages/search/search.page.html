@@ -6,7 +6,7 @@
 </section>
 
 <form class="form" (submit)="$event.preventDefault(); submit()">
-  <input [(ngModel)]="q" name="q" placeholder="Ex.: Inception" />
+  <input [ngModel]="q()" (ngModelChange)="q.set($event)" name="q" placeholder="Ex.: Inception" />
   <select [value]="lang()" (change)="lang.set(($any($event.target).value))">
     <option value="pt-PT">pt-PT</option>
     <option value="en-US">en-US</option>
@@ -14,33 +14,27 @@
   <button type="submit">Pesquisar</button>
 </form>
 
-@if (!q.trim()) {
+@if (!q().trim()) {
   <div class="hint">Digite algo para pesquisar.</div>
 } @else {
-  @if (vm$() | async; as data) {
-    @if (data?.error) {
-      <div class="error">{{ data.error }}</div>
-    } @else {
-      <div class="pager">
-        <button (click)="prev()" [disabled]="page() <= 1">Anterior</button>
-        <span>Página {{ page() }}</span>
-        <button (click)="next()">Próxima</button>
-      </div>
-
-      <div class="grid">
-        @for (m of data.results; track m.id) {
-          <app-movie-card
-            [movie]="m"
-            [showFavoriteButton]="auth.isLoggedIn()"
-            [favorite]="favoriteIds().includes(m.id)"
-            (favoriteToggle)="onFavoriteToggle(m)"
-            (movieClick)="onMovieClick(m)"
-          />
-        }
-      </div>
-    }
-  } @else {
+  @if (loading()) {
     <div class="loading">A carregar…</div>
+  } @else if (error()) {
+    <div class="error">{{ error() }}</div>
+  } @else if (results()?.results?.length) {
+    <div class="grid">
+      @for (m of results()?.results; track m.id) {
+        <app-movie-card
+          [movie]="m"
+          [showFavoriteButton]="auth.isLoggedIn()"
+          [favorite]="favoriteIds().includes(m.id)"
+          (favoriteToggle)="onFavoriteToggle(m)"
+          (movieClick)="onMovieClick(m)"
+        />
+      }
+    </div>
+  } @else {
+    <div class="hint">Nenhum filme encontrado.</div>
   }
 }
 

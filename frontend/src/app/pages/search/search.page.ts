@@ -1,31 +1,26 @@
-import { Component, computed, signal } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '../../core/movie.service';
 import { AuthService } from '../../core/auth.service';
 import { MovieCardComponent } from '../../shared/movie-card/movie-card.component';
 import { MovieDetailsDialog } from '../../shared/movie-details-dialog/movie-details-dialog';
-import type { TmdbMovie } from '../../core/api.types';
+import type { TmdbMovie, TmdbPagedResponse } from '../../core/api.types';
 
 @Component({
   selector: 'app-search-page',
   standalone: true,
-  imports: [AsyncPipe, FormsModule, MovieCardComponent],
+  imports: [FormsModule, MovieCardComponent],
   templateUrl: './search.page.html',
   styleUrl: './search.page.scss'
 })
 export class SearchPage {
-  q = '';
-  protected readonly page = signal(1);
+  protected readonly q = signal('');
   protected readonly lang = signal<'pt-PT' | 'en-US'>('pt-PT');
   protected readonly favoriteIds = signal<number[]>([]);
-
-  protected readonly vm$ = computed(() => {
-    const q = this.q.trim();
-    if (!q) return null;
-    return this.movies.search({ q, page: this.page(), lang: this.lang() });
-  });
+  protected readonly loading = signal(false);
+  protected readonly error = signal<string | null>(null);
+  protected readonly results = signal<TmdbPagedResponse<TmdbMovie> | null>(null);
 
   constructor(private readonly movies: MovieService, protected readonly auth: AuthService, private readonly dialog: MatDialog) {
     if (this.auth.isLoggedIn()) {
@@ -34,15 +29,43 @@ export class SearchPage {
   }
 
   submit() {
-    this.page.set(1);
-  }
+    const query = this.q().trim();
+    this.results.set(null);
+    this.error.set(null);
+    if (!query) {
+      return;
+    }
 
-  next() {
-    this.page.update((p) => p + 1);
-  }
+    this.loading.set(true);
+    this.movies.search({ q: query, lang: this.lang() }).subscribe((res) => {
+      this.loading.set(false);
+      if (res.error) {
+        this.results.set(null);
+        this.error.set(res.error);
+        return;
+      }
 
-  prev() {
-    this.page.update((p) => Math.max(1, p - 1));
+      let payload = res;
+      if (Array.isArray(payload.results)) {
+        const exactMatches = payload.results.filter((movie) =>
+          (movie.title ?? '').toLowerCase() === query.toLowerCase()
+        );
+
+        if (exactMatches.length === 1) {
+          payload = {
+            ...payload,
+            results: exactMatches,
+            total_results: exactMatches.length
+          };
+        }
+      }
+
+      this.results.set(payload);
+    }, () => {
+      this.loading.set(false);
+      this.error.set('Erro ao pesquisar.');
+      this.results.set(null);
+    });
   }
 
   private loadFavorites(): void {
