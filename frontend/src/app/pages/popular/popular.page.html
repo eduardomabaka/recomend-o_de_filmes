@@ -27,6 +27,7 @@
           [movie]="m"
           [showFavoriteButton]="auth.isLoggedIn()"
           [favorite]="favoriteIds().includes(m.id)"
+          (movieClick)="onMovieClick(m)"
           (favoriteToggle)="onFavoriteToggle(m)"
         />
       }

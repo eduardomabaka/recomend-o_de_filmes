@@ -64,18 +64,21 @@ select {
 
 /* Material dialog: fundo translúcido (recomendações, etc.) */
 .cdk-overlay-backdrop.dialog-transparent-backdrop {
-  background: rgba(8, 12, 26, 0.38);
-  backdrop-filter: blur(7px);
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 :root[data-theme='light'] .cdk-overlay-backdrop.dialog-transparent-backdrop {
-  background: rgba(240, 244, 250, 0.48);
+  background: rgba(240, 244, 250, 0.82);
 }
 
 .dialog-glass-surface .mat-mdc-dialog-container .mdc-dialog__surface {
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   box-shadow:
     0 24px 80px rgba(0, 0, 0, 0.35),
     0 8px 24px rgba(0, 0, 0, 0.18);

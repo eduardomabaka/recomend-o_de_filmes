@@ -17,7 +17,9 @@
           </div>
         }
       </div>
-      <button type="button" class="close-btn" (click)="close()">Fechar</button>
+      <button type="button" class="close-btn" aria-label="Fechar detalhes" (click)="close()">
+        <span aria-hidden="true">×</span>
+      </button>
     </header>
 
     <div class="dialog-grid">
