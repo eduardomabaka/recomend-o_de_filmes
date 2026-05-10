@@ -1,50 +1,69 @@
 <section class="header">
   <div>
     <h2>Populares</h2>
-    <p>Filmes populares no TMDB.</p>
+    @if (showCategories()) {
+      <p>Selecione uma categoria para ver recomendações</p>
+    } @else {
+      <p>Filmes populares no TMDB.</p>
+    }
   </div>
 
-  <div class="controls">
-    <select [value]="lang()" (change)="lang.set(($any($event.target).value))">
-      <option value="pt-PT">pt-PT</option>
-      <option value="en-US">en-US</option>
-    </select>
-    <div class="pager">
-      <button (click)="prev()" [disabled]="page() <= 1">Anterior</button>
-      <span>Página {{ page() }}</span>
-      <button (click)="next()">Próxima</button>
+  @if (!showCategories()) {
+    <div class="controls">
+      <select [value]="lang()" (change)="lang.set(($any($event.target).value))">
+        <option value="pt-PT">pt-PT</option>
+        <option value="en-US">en-US</option>
+      </select>
+      <div class="pager">
+        <button (click)="backToCategories()" class="back-btn">← Voltar</button>
+        <button (click)="prev()" [disabled]="page() <= 1">Anterior</button>
+        <span>Página {{ page() }}</span>
+        <button (click)="next()">Próxima</button>
+      </div>
     </div>
-  </div>
+  }
 </section>
 
-@if (vm$() | async; as data) {
-  @if (data?.error) {
-    <div class="error">{{ data.error }}</div>
-  } @else {
-    <div class="grid">
-      @for (m of data.results; track m.id) {
-        <app-movie-card
-          [movie]="m"
-          [showFavoriteButton]="auth.isLoggedIn()"
-          [favorite]="favoriteIds().includes(m.id)"
-          (movieClick)="onMovieClick(m)"
-          (favoriteToggle)="onFavoriteToggle(m)"
-        />
-      }
-    </div>
-    @if (!auth.isLoggedIn()) {
-      <section class="guest-cta" aria-label="Convite para criar sessão">
-        <p>
-          Para pesquisar filmes, guardar favoritos e ver recomendações completas, inicia sessão ou cria uma conta.
-        </p>
-        <div class="guest-cta-actions">
-          <a routerLink="/login" class="cta-btn primary">Entrar</a>
-          <a routerLink="/register" class="cta-btn ghost">Criar conta</a>
-        </div>
-      </section>
+@if (showCategories()) {
+  <div class="categories-grid">
+    @for (category of categories; track category.id) {
+      <div class="category-card" (click)="selectCategory(category.id)">
+        <div class="category-icon">{{ category.icon }}</div>
+        <h3 class="category-name">{{ category.name }}</h3>
+        <p class="category-description">{{ category.description }}</p>
+      </div>
     }
-  }
+  </div>
 } @else {
-  <div class="loading">A carregar…</div>
+  @if (vm$() | async; as data) {
+    @if (data?.error) {
+      <div class="error">{{ data.error }}</div>
+    } @else {
+      <div class="grid">
+        @for (m of data.results; track m.id) {
+          <app-movie-card
+            [movie]="m"
+            [showFavoriteButton]="auth.isLoggedIn()"
+            [favorite]="favoriteIds().includes(m.id)"
+            (movieClick)="onMovieClick(m)"
+            (favoriteToggle)="onFavoriteToggle(m)"
+          />
+        }
+      </div>
+      @if (!auth.isLoggedIn()) {
+        <section class="guest-cta" aria-label="Convite para criar sessão">
+          <p>
+            Para pesquisar filmes, guardar favoritos e ver recomendações completas, inicia sessão ou cria uma conta.
+          </p>
+          <div class="guest-cta-actions">
+            <a routerLink="/login" class="cta-btn primary">Entrar</a>
+            <a routerLink="/register" class="cta-btn ghost">Criar conta</a>
+          </div>
+        </section>
+      }
+    }
+  } @else {
+    <div class="loading">A carregar…</div>
+  }
 }
 

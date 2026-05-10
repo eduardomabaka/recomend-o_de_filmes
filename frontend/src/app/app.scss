@@ -29,10 +29,21 @@
   line-height: 0;
   border-radius: 10px;
   outline-offset: 3px;
-}
+  border: 2px solid transparent;
+  padding: 4px;
+  transition: all 0.3s ease;
+  position: relative;
 
-.brand:focus-visible {
-  outline: 2px solid var(--focus-ring);
+  &:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(192, 57, 43, 0.3),
+                0 0 12px rgba(192, 57, 43, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+  }
 }
 
 .brand-logo {
@@ -40,6 +51,11 @@
   width: 2.35rem;
   height: 2.35rem;
   object-fit: contain;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.brand:hover .brand-logo {
+  transform: scale(1.05);
 }
 
 .nav,

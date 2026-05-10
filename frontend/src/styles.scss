@@ -4,28 +4,41 @@
 
 :root {
   color-scheme: dark;
-  --bg: #0b1220;
-  --surface: rgba(255, 255, 255, 0.04);
-  --surface-strong: rgba(255, 255, 255, 0.06);
-  --surface-muted: rgba(255, 255, 255, 0.03);
-  --surface-accent: rgba(124, 58, 237, 0.12);
-  --text: #e6e9f2;
-  --text-strong: #ffffff;
-  --text-muted: rgba(230, 233, 242, 0.75);
-  --text-soft: rgba(230, 233, 242, 0.85);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --border-accent: rgba(124, 58, 237, 0.35);
-  --danger-border: rgba(255, 59, 129, 0.35);
-  --topbar-bg: rgba(13, 20, 38, 0.85);
-  --footer-bg: rgba(13, 20, 38, 0.75);
-  --primary-gradient: linear-gradient(135deg, #ff3b81, #7c3aed);
-  --focus-ring: rgba(255, 59, 129, 0.75);
+  
+  /* Paleta de cores obrigatória */
+  --bg-primary: #0E0E0E;
+  --bg-secondary: #1A1A1A;
+  --color-accent: #C0392B;
+  --text-primary: #F0F0F0;
+  --text-secondary: #888888;
+  
+  /* Legacy variables (mantidas para compatibilidade) */
+  --bg: #0E0E0E;
+  --surface: #1A1A1A;
+  --surface-strong: #252525;
+  --surface-muted: #151515;
+  --surface-accent: rgba(192, 57, 43, 0.12);
+  --text: #F0F0F0;
+  --text-strong: #FFFFFF;
+  --text-muted: #888888;
+  --text-soft: #A0A0A0;
+  --border: rgba(192, 57, 43, 0.15);
+  --border-strong: rgba(192, 57, 43, 0.25);
+  --border-accent: rgba(192, 57, 43, 0.35);
+  --danger-border: rgba(192, 57, 43, 0.35);
+  --topbar-bg: rgba(14, 14, 14, 0.95);
+  --footer-bg: rgba(14, 14, 14, 0.85);
+  --primary-gradient: linear-gradient(135deg, #C0392B, #E74C3C);
+  --focus-ring: rgba(192, 57, 43, 0.75);
 }
 
 :root[data-theme='light'] {
   color-scheme: light;
   --bg: #f1f3f7;
+  --bg-secondary: #fbfcfe;
+  --color-accent: #C0392B;
+  --text-primary: #141a2a;
+  --text-secondary: rgba(32, 38, 55, 0.62);
   --surface: #fbfcfe;
   --surface-strong: #e8ebf1;
   --surface-muted: #e2e6ee;
@@ -64,21 +77,21 @@ select {
 
 /* Material dialog: fundo translúcido (recomendações, etc.) */
 .cdk-overlay-backdrop.dialog-transparent-backdrop {
-  background: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(14, 14, 14, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 :root[data-theme='light'] .cdk-overlay-backdrop.dialog-transparent-backdrop {
-  background: rgba(240, 244, 250, 0.82);
+  background: rgba(14, 14, 14, 0.92);
 }
 
 .dialog-glass-surface .mat-mdc-dialog-container .mdc-dialog__surface {
-  background: rgba(15, 23, 42, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1A1A1A;
+  border: 1px solid #2a2a2a;
   border-radius: 22px;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   box-shadow:
     0 24px 80px rgba(0, 0, 0, 0.35),
     0 8px 24px rgba(0, 0, 0, 0.18);
