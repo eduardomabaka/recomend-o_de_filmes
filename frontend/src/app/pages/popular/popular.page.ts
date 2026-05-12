@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { map } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
@@ -91,14 +91,20 @@ export class PopularPage {
   });
 
   constructor(
+    private readonly route: ActivatedRoute,
     private readonly movies: MovieService,
     protected readonly auth: AuthService,
     private readonly dialog: MatDialog,
     private readonly router: Router
   ) {
-    // Mostrar categorias apenas se estiver logado
-    this.showCategories.set(this.auth.isLoggedIn());
-    
+    const initialCategory = route.snapshot.queryParamMap.get('category');
+    const initialPage = Number(route.snapshot.queryParamMap.get('page') ?? 1);
+    const safePage = Number.isFinite(initialPage) && initialPage > 0 ? initialPage : 1;
+
+    this.selectedCategory.set(initialCategory && this.categories.some((c) => c.id === initialCategory) ? initialCategory : null);
+    this.page.set(safePage);
+    this.showCategories.set(this.auth.isLoggedIn() && !this.selectedCategory());
+
     if (this.auth.isLoggedIn()) {
       this.loadFavorites();
     }
@@ -127,12 +133,23 @@ export class PopularPage {
   selectCategory(categoryId: string): void {
     this.selectedCategory.set(categoryId);
     this.showCategories.set(false);
+    this.page.set(1);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { category: categoryId, page: 1 },
+      queryParamsHandling: 'merge',
+    });
   }
 
   backToCategories(): void {
     this.showCategories.set(true);
     this.selectedCategory.set(null);
     this.page.set(1);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { category: null, page: null },
+      queryParamsHandling: 'merge',
+    });
   }
 
   private genreIdForCategory(categoryId: string): number | null {
@@ -153,11 +170,27 @@ export class PopularPage {
   }
 
   next() {
-    this.page.update((p) => p + 1);
+    this.page.update((p) => {
+      const nextPage = p + 1;
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { page: nextPage },
+        queryParamsHandling: 'merge',
+      });
+      return nextPage;
+    });
   }
 
   prev() {
-    this.page.update((p) => Math.max(1, p - 1));
+    this.page.update((p) => {
+      const prevPage = Math.max(1, p - 1);
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { page: prevPage },
+        queryParamsHandling: 'merge',
+      });
+      return prevPage;
+    });
   }
 
   onMovieClick(movie: TmdbMovie) {

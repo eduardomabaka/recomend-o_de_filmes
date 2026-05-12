@@ -47,14 +47,17 @@ final class MovieController
         }
 
         $lang = (string)($query['lang'] ?? 'pt-PT');
-        $page = max(1, (int)($query['page'] ?? 1));
+        $appPage = max(1, (int)($query['page'] ?? 1));
+        $tmdbPage = intdiv($appPage - 1, 2) + 1;
 
         $tmdb = new TmdbService();
-        $payload = $tmdb->getRecommendations($mid, $lang, $page);
+        $payload = $tmdb->getRecommendations($mid, $lang, $tmdbPage);
 
         if (isset($payload['error']) && $payload['error'] !== '') {
             return ['status' => 200, 'data' => $payload];
         }
+
+        $payload = self::applyAppPagination($payload, $appPage);
 
         $uid = (int)($_SESSION['user_id'] ?? 0);
         if ($uid > 0) {
@@ -65,6 +68,27 @@ final class MovieController
         }
 
         return ['status' => 200, 'data' => $payload];
+    }
+
+    private static function applyAppPagination(array $payload, int $appPage): array
+    {
+        $results = $payload['results'] ?? null;
+        if (!is_array($results)) {
+            $payload['page'] = $appPage;
+            $payload['total_pages'] = 1;
+            $payload['total_results'] = 0;
+            return $payload;
+        }
+
+        $totalResults = isset($payload['total_results']) ? (int)$payload['total_results'] : count($results);
+        $appTotalPages = (int)max(1, ceil($totalResults / 10));
+        $offset = (($appPage - 1) % 2) * 10;
+        $payload['results'] = array_slice($results, $offset, 10);
+        $payload['page'] = $appPage;
+        $payload['total_pages'] = $appTotalPages;
+        $payload['total_results'] = $totalResults;
+
+        return $payload;
     }
 
     public static function getRecommendationPick(array $query): array

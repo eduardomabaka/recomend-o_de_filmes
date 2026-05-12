@@ -11,8 +11,8 @@
     </select>
     <div class="pager">
       <button (click)="prev()" [disabled]="page() <= 1">Anterior</button>
-      <span>Página {{ page() }}</span>
-      <button (click)="next()">Próxima</button>
+      <span>Página {{ page() }} de {{ totalPages() }}</span>
+      <button (click)="next()" [disabled]="isLastPage()">Próxima</button>
     </div>
   </div>
 </section>

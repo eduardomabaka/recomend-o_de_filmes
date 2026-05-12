@@ -113,6 +113,37 @@ export class MovieDetailsDialog {
     return out;
   }
 
+  private getProviderLink(provider: TmdbWatchProvider): string | null {
+    const knownLinks: Record<number, string> = {
+      8: 'https://www.netflix.com/',
+      9: 'https://www.primevideo.com/',
+      2: 'https://tv.apple.com/',
+      337: 'https://www.disneyplus.com/',
+      384: 'https://www.hbomax.com/',
+      3: 'https://play.google.com/store/movies',
+      119: 'https://www.youtube.com/',
+      350: 'https://www.paramountplus.com/',
+      619: 'https://www.starplus.com/',
+    };
+
+    if (knownLinks[provider.provider_id]) {
+      return knownLinks[provider.provider_id];
+    }
+
+    const name = provider.provider_name.toLowerCase();
+    if (name.includes('netflix')) return 'https://www.netflix.com/';
+    if (name.includes('prime')) return 'https://www.primevideo.com/';
+    if (name.includes('disney')) return 'https://www.disneyplus.com/';
+    if (name.includes('apple')) return 'https://tv.apple.com/';
+    if (name.includes('hbo')) return 'https://www.hbomax.com/';
+    if (name.includes('youtube')) return 'https://www.youtube.com/';
+    if (name.includes('google')) return 'https://play.google.com/store/movies';
+    if (name.includes('paramount')) return 'https://www.paramountplus.com/';
+    if (name.includes('star+')) return 'https://www.starplus.com/';
+
+    return null;
+  }
+
   close() {
     this.dialogRef.close();
   }

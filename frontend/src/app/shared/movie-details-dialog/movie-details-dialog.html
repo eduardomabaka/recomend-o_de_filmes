@@ -62,7 +62,7 @@
               @for (provider of topProviders(); track provider.provider_id) {
                 <a
                   class="platform-tile"
-                  [href]="providerLink() || '#'"
+                  [href]="getProviderLink(provider) || providerLink() || '#'"
                   target="_blank"
                   rel="noreferrer noopener"
                   title="Ver {{ provider.provider_name }}"

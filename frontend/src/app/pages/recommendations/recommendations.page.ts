@@ -2,6 +2,7 @@ import { Component, computed, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { map } from 'rxjs';
 import { MovieService } from '../../core/movie.service';
 import { AuthService } from '../../core/auth.service';
 import { MovieCardComponent } from '../../shared/movie-card/movie-card.component';
@@ -20,14 +21,24 @@ export class RecommendationsPage {
   protected readonly page = signal(1);
   protected readonly lang = signal<'pt-PT' | 'en-US'>('pt-PT');
   protected readonly favoriteIds = signal<number[]>([]);
+  protected readonly totalPages = signal(1);
 
   /** Recomendação favorita do utilizador para esta lista (filme de origem). */
   protected readonly recommendationPickId = signal<number | null>(null);
 
+  protected readonly isLastPage = computed(() => this.page() >= this.totalPages());
+
   protected readonly vm$ = computed(() => {
     const movieId = this.movieId();
     if (!movieId) return null;
-    return this.movies.recommendations({ movieId, page: this.page(), lang: this.lang() });
+    return this.movies
+      .recommendations({ movieId, page: this.page(), lang: this.lang() })
+      .pipe(
+        map((payload) => {
+          this.totalPages.set(payload?.total_pages ?? 1);
+          return payload;
+        })
+      );
   });
 
   constructor(
