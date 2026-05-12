@@ -83,12 +83,12 @@ select {
 }
 
 :root[data-theme='light'] .cdk-overlay-backdrop.dialog-transparent-backdrop {
-  background: rgba(14, 14, 14, 0.92);
+  background: rgba(248, 250, 253, 0.92);
 }
 
 .dialog-glass-surface .mat-mdc-dialog-container .mdc-dialog__surface {
-  background: #1A1A1A;
-  border: 1px solid #2a2a2a;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 22px;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);

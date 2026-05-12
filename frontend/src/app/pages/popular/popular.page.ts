@@ -2,6 +2,7 @@ import { Component, computed, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { map } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { MovieService } from '../../core/movie.service';
 import type { TmdbMovie } from '../../core/api.types';
@@ -34,38 +35,59 @@ export class PopularPage {
       id: 'action',
       name: 'Ação',
       icon: '⚡',
-      description: 'Ver recomendações'
+      description: 'Ver filmes de ação'
     },
     {
       id: 'horror',
       name: 'Terror',
       icon: '👻',
-      description: 'Ver recomendações'
+      description: 'Ver filmes de terror'
     },
     {
       id: 'comedy',
       name: 'Comédia',
       icon: '😂',
-      description: 'Ver recomendações'
+      description: 'Ver filmes de comédia'
     },
     {
       id: 'drama',
       name: 'Drama',
       icon: '🎭',
-      description: 'Ver recomendações'
+      description: 'Ver filmes de drama'
     },
     {
       id: 'scifi',
       name: 'Ficção Científica',
       icon: '🚀',
-      description: 'Ver recomendações'
+      description: 'Ver filmes de ficção científica'
     }
   ];
 
   protected readonly vm$ = computed(() => {
     const page = this.page();
     const lang = this.lang();
-    return this.movies.popular({ page, lang });
+    const category = this.selectedCategory();
+    const request$ = this.movies.popular({ page, lang });
+
+    if (!category) {
+      return request$;
+    }
+
+    const genreId = this.genreIdForCategory(category);
+    return request$.pipe(
+      map((payload) => {
+        if (!payload || !Array.isArray(payload.results) || !genreId) {
+          return payload;
+        }
+
+        return {
+          ...payload,
+          results: payload.results.filter(
+            (movie) => Array.isArray(movie.genre_ids) && movie.genre_ids.includes(genreId)
+          )
+        };
+      })
+    );
   });
 
   constructor(
@@ -111,6 +133,23 @@ export class PopularPage {
     this.showCategories.set(true);
     this.selectedCategory.set(null);
     this.page.set(1);
+  }
+
+  private genreIdForCategory(categoryId: string): number | null {
+    switch (categoryId) {
+      case 'action':
+        return 28;
+      case 'horror':
+        return 27;
+      case 'comedy':
+        return 35;
+      case 'drama':
+        return 18;
+      case 'scifi':
+        return 878;
+      default:
+        return null;
+    }
   }
 
   next() {

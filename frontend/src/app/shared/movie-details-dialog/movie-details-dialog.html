@@ -5,13 +5,25 @@
         <p class="movie-tagline">{{ details.tagline || 'Ficha do filme' }}</p>
         <h2>{{ details.title }}</h2>
         <div class="meta-row">
-          <span class="badge">{{ details.release_date ? details.release_date.slice(0, 4) : '—' }}</span>
+          <span class="badge">
+            <span class="badge-label">Ano</span>
+            {{ details.release_date ? details.release_date.slice(0, 4) : '—' }}
+          </span>
           <span class="dot">•</span>
-          <span class="badge">{{ details.runtime ? details.runtime + 'm' : '—' }}</span>
+          <span class="badge">
+            <span class="badge-label">Duração</span>
+            {{ details.runtime ? details.runtime + 'm' : '—' }}
+          </span>
           <span class="dot">•</span>
-          <span class="badge">{{ details.vote_average?.toFixed(1) ?? '—' }}</span>
+          <span class="badge">
+            <span class="badge-label">Nota</span>
+            {{ details.vote_average?.toFixed(1) ?? '—' }}
+          </span>
           <span class="dot">•</span>
-          <span class="badge">{{ details.vote_count ?? '—' }}</span>
+          <span class="badge">
+            <span class="badge-label">Votos</span>
+            {{ details.vote_count ?? '—' }}
+          </span>
         </div>
         @if (details.genres?.length) {
           <div class="genres">
