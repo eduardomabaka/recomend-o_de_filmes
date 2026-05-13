@@ -32,14 +32,14 @@ export class MovieDetailsDialog {
   protected readonly maxPlatforms = this.data.maxPlatforms ?? 4;
 
   protected readonly movie = this.data.movie;
-  protected readonly movieDetails = signal<TmdbMovieDetails | null>(null);
+  readonly movieDetails = signal<TmdbMovieDetails | null>(null);
   protected readonly providers$ = this.movies.watchProviders({ movieId: this.movie.id });
   protected readonly watchSections = signal<{ title: string; items: TmdbWatchProvider[] }[]>(
     []
   );
   /** Em modo recomendações: apenas os primeiros N fornecedores distintos. */
-  protected readonly topProviders = signal<TmdbWatchProvider[]>([]);
-  protected readonly providerLink = signal<string | null>(null);
+  readonly topProviders = signal<TmdbWatchProvider[]>([]);
+  readonly providerLink = signal<string | null>(null);
 
   constructor() {
     this.movies.details({ movieId: this.movie.id }).subscribe((details) => {
@@ -113,7 +113,7 @@ export class MovieDetailsDialog {
     return out;
   }
 
-  private getProviderLink(provider: TmdbWatchProvider): string | null {
+  getProviderLink(provider: TmdbWatchProvider): string | null {
     const knownLinks: Record<number, string> = {
       8: 'https://www.netflix.com/',
       9: 'https://www.primevideo.com/',
