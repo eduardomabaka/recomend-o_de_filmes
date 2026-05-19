@@ -2,7 +2,7 @@
   <div>
     <h2>Populares</h2>
     @if (showCategories()) {
-      <p>Selecione uma categoria para ver recomendações</p>
+      <p>Escolha um género para descobrir filmes populares</p>
     } @else {
       <p>Filmes populares no TMDB.</p>
     }
@@ -25,15 +25,26 @@
 </section>
 
 @if (showCategories()) {
-  <div class="categories-grid">
-    @for (category of categories; track category.id) {
-      <div class="category-card" (click)="selectCategory(category.id)">
-        <div class="category-icon">{{ category.icon }}</div>
-        <h3 class="category-name">{{ category.name }}</h3>
-        <p class="category-description">{{ category.description }}</p>
-      </div>
-    }
-  </div>
+  <section class="categories-section" aria-label="Categorias de filmes">
+    <div class="categories-grid">
+      @for (category of categories; track category.id) {
+        <button
+          type="button"
+          class="category-card"
+          [style.--category-accent]="category.accent"
+          (click)="selectCategory(category.id)"
+        >
+          <span class="category-card__glow" aria-hidden="true"></span>
+          <span class="category-card__icon" aria-hidden="true">{{ category.icon }}</span>
+          <span class="category-card__content">
+            <span class="category-card__label">{{ category.name }}</span>
+            <span class="category-card__desc">{{ category.description }}</span>
+          </span>
+          <span class="category-card__arrow" aria-hidden="true">→</span>
+        </button>
+      }
+    </div>
+  </section>
 } @else {
   @if (vm$() | async; as data) {
     @if (data?.error) {

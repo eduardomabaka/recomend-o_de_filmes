@@ -14,6 +14,7 @@ export interface Category {
   name: string;
   icon: string;
   description: string;
+  accent: string;
 }
 
 @Component({
@@ -35,31 +36,36 @@ export class PopularPage {
       id: 'action',
       name: 'Ação',
       icon: '⚡',
-      description: 'Ver filmes de ação'
+      description: 'Explosões, perseguições e adrenalina',
+      accent: '#e74c3c'
     },
     {
       id: 'horror',
       name: 'Terror',
       icon: '👻',
-      description: 'Ver filmes de terror'
+      description: 'Suspense, medo e sobressaltos',
+      accent: '#9b59b6'
     },
     {
       id: 'comedy',
       name: 'Comédia',
       icon: '😂',
-      description: 'Ver filmes de comédia'
+      description: 'Risos garantidos do início ao fim',
+      accent: '#f39c12'
     },
     {
       id: 'drama',
       name: 'Drama',
       icon: '🎭',
-      description: 'Ver filmes de drama'
+      description: 'Histórias intensas e emocionantes',
+      accent: '#3498db'
     },
     {
       id: 'scifi',
       name: 'Ficção Científica',
       icon: '🚀',
-      description: 'Ver filmes de ficção científica'
+      description: 'Futuros distantes e tecnologia',
+      accent: '#1abc9c'
     }
   ];
 

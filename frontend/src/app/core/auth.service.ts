@@ -143,32 +143,6 @@ export class AuthService {
     this.userSignal.set(null);
   }
 
-  forgotPassword(body: { email: string }): Observable<{
-    success?: boolean;
-    message?: string;
-    error?: string;
-    delivery?: 'none' | 'log_file' | 'sent';
-  }> {
-    const payload = {
-      email: body.email,
-      frontendOrigin: typeof window !== 'undefined' ? window.location.origin : undefined,
-    };
-    return this.requestWithFallback<{
-      success?: boolean;
-      message?: string;
-      error?: string;
-      delivery?: 'none' | 'log_file' | 'sent';
-    }>('/api/auth/forgot-password', 'post', payload).pipe(catchError((error) => of({ error: this.errorMessage(error) })));
-  }
-
-  resetPassword(body: { token: string; password: string }): Observable<{ success?: boolean; message?: string; error?: string }> {
-    return this.requestWithFallback<{ success?: boolean; message?: string; error?: string }>(
-      '/api/auth/reset-password',
-      'post',
-      body
-    ).pipe(catchError((error) => of({ error: this.errorMessage(error) })));
-  }
-
   requestAccountDeletion(): Observable<{ success?: boolean; message?: string; error?: string }> {
     return this.requestWithFallback<{ success?: boolean; message?: string; error?: string }>(
       '/api/auth/account-delete/request',

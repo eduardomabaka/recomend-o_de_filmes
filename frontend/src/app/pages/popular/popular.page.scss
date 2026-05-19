@@ -57,87 +57,141 @@ button {
   gap: 0.9rem;
 }
 
-/* Grid para categorias */
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem 0;
+/* Categorias */
+.categories-section {
+  margin-top: 0.5rem;
 }
 
-/* Card de categoria */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  padding: 0.5rem 0 2rem;
+}
+
 .category-card {
-  background: var(--bg-secondary);
-  border: 2px solid transparent;
-  border-radius: 16px;
-  padding: 2rem 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  --category-accent: var(--color-accent);
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--category-accent) 28%, transparent);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--category-accent) 14%, var(--bg-secondary)) 0%, var(--bg-secondary) 55%),
+    var(--bg-secondary);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
   overflow: hidden;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at center,
-      rgba(192, 57, 43, 0.1) 0%,
-      transparent 70%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--category-accent) 55%, transparent);
+    box-shadow:
+      0 12px 32px color-mix(in srgb, var(--category-accent) 22%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--category-accent) 18%, transparent);
 
-  &:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-8px);
-    box-shadow: 0 8px 24px rgba(192, 57, 43, 0.3),
-                0 0 20px rgba(192, 57, 43, 0.2);
-
-    &::before {
+    .category-card__glow {
       opacity: 1;
     }
 
-    .category-icon {
-      transform: scale(1.1);
+    .category-card__icon {
+      transform: scale(1.08);
+      border-color: color-mix(in srgb, var(--category-accent) 50%, transparent);
     }
 
-    .category-name {
-      color: var(--color-accent);
+    .category-card__arrow {
+      opacity: 1;
+      transform: translateX(4px);
+      color: var(--category-accent);
     }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--category-accent);
+    outline-offset: 2px;
   }
 }
 
-.category-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease;
-  display: block;
+.category-card__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 0% 50%,
+    color-mix(in srgb, var(--category-accent) 28%, transparent) 0%,
+    transparent 62%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
 }
 
-.category-name {
-  color: var(--text-primary);
-  font-size: 1.25rem;
+.category-card__icon {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  font-size: 1.65rem;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--category-accent) 35%, transparent);
+  background: color-mix(in srgb, var(--category-accent) 16%, var(--surface-strong));
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.category-card__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.category-card__label {
+  font-size: 1.05rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
-  transition: color 0.3s ease;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
 }
 
-.category-description {
+.category-card__desc {
+  font-size: 0.86rem;
+  line-height: 1.4;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin: 0;
-  transition: color 0.3s ease;
+}
+
+.category-card__arrow {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.55;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease,
+    color 0.25s ease;
+}
+
+@media (max-width: 560px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .loading,

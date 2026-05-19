@@ -51,20 +51,6 @@ button:disabled {
   opacity: 0.72;
 }
 
-.forgot-row {
-  margin: -0.25rem 0 0;
-  text-align: right;
-}
-
-.forgot-row a {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
-
-.forgot-row a:hover {
-  color: var(--text-strong);
-}
-
 .feedback-success {
   margin: 0;
   color: #27ae60;

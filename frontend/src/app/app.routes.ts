@@ -8,8 +8,6 @@ import { LoginPage } from './pages/login/login.page';
 import { RegisterPage } from './pages/register/register.page';
 import { FavoritesPage } from './pages/favorites/favorites.page';
 import { ProfilePage } from './pages/profile/profile.page';
-import { ForgotPasswordPage } from './pages/forgot-password/forgot-password.page';
-import { ResetPasswordPage } from './pages/reset-password/reset-password.page';
 
 export const routes: Routes = [
   {
@@ -42,16 +40,6 @@ export const routes: Routes = [
     path: 'register',
     component: RegisterPage,
     data: { animation: 'register' }
-  },
-  {
-    path: 'forgot-password',
-    component: ForgotPasswordPage,
-    data: { animation: 'forgot' }
-  },
-  {
-    path: 'reset-password',
-    component: ResetPasswordPage,
-    data: { animation: 'reset' }
   },
   {
     path: 'favorites',
