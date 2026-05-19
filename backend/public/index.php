@@ -90,6 +90,14 @@ if ($method === 'POST' && $path === '/api/auth/register') {
     $result = AuthController::updateProfile(jsonBody());
 } elseif ($method === 'GET' && $path === '/api/auth/me') {
     $result = AuthController::me();
+} elseif ($method === 'POST' && $path === '/api/auth/forgot-password') {
+    $result = AuthController::forgotPassword(jsonBody());
+} elseif ($method === 'POST' && $path === '/api/auth/reset-password') {
+    $result = AuthController::resetPassword(jsonBody());
+} elseif ($method === 'POST' && $path === '/api/auth/account-delete/request') {
+    $result = AuthController::requestAccountDeletion();
+} elseif ($method === 'POST' && $path === '/api/auth/account-delete/confirm') {
+    $result = AuthController::confirmAccountDeletion(jsonBody());
 } elseif ($method === 'GET' && $path === '/api/movies/popular') {
     $result = MovieController::popular($_GET);
 } elseif ($method === 'GET' && $path === '/api/movies/search') {

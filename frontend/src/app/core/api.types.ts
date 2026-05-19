@@ -32,6 +32,8 @@ export type TmdbWatchProvider = {
   provider_id: number;
   provider_name: string;
   logo_path?: string | null;
+  /** Algumas respostas TMDB podem incluir URL por fornecedor. */
+  link?: string | null;
 };
 
 export type TmdbWatchProviderCountry = {

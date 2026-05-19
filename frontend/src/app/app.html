@@ -37,8 +37,10 @@
     </nav>
   </header>
 
-  <main class="container">
-    <router-outlet />
+  <main class="container route-outlet-host">
+    <div class="route-animation-inner" [@routeAnimations]="prepareRoute(outlet)">
+      <router-outlet #outlet="outlet" />
+    </div>
   </main>
 
   <footer class="footer">

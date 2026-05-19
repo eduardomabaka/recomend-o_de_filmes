@@ -16,6 +16,11 @@ export type MovieDetailsDialogInput = {
   maxPlatforms?: number;
 };
 
+export type WatchProviderEntry = {
+  provider: TmdbWatchProvider;
+  url: string | null;
+};
+
 @Component({
   selector: 'app-movie-details-dialog',
   standalone: true,
@@ -37,9 +42,9 @@ export class MovieDetailsDialog {
   protected readonly watchSections = signal<{ title: string; items: TmdbWatchProvider[] }[]>(
     []
   );
-  /** Em modo recomendações: apenas os primeiros N fornecedores distintos. */
-  readonly topProviders = signal<TmdbWatchProvider[]>([]);
-  readonly providerLink = signal<string | null>(null);
+  readonly topProviderEntries = signal<WatchProviderEntry[]>([]);
+  readonly watchProvidersLoaded = signal(false);
+  readonly hasWatchProviders = signal(false);
 
   constructor() {
     this.movies.details({ movieId: this.movie.id }).subscribe((details) => {
@@ -48,15 +53,36 @@ export class MovieDetailsDialog {
 
     this.providers$.subscribe((providers) => {
       const countryProviders = this.pickCountryProviders(providers);
-      this.providerLink.set(countryProviders?.link ?? null);
+      const hasAny = this.countryHasProviders(countryProviders);
+      this.hasWatchProviders.set(hasAny);
+      this.watchProvidersLoaded.set(true);
+
       if (this.overlayMode) {
         this.watchSections.set([]);
-        this.topProviders.set(this.flattenProviders(countryProviders, this.maxPlatforms));
+        this.topProviderEntries.set(
+          hasAny ? this.flattenProviderEntries(countryProviders, this.maxPlatforms) : []
+        );
       } else {
         this.watchSections.set(this.buildWatchSections(countryProviders));
-        this.topProviders.set([]);
+        this.topProviderEntries.set([]);
       }
     });
+  }
+
+  openWatchEntry(entry: WatchProviderEntry): void {
+    if (!entry.url) {
+      return;
+    }
+    window.open(entry.url, '_blank', 'noopener,noreferrer');
+  }
+
+  private countryHasProviders(country: TmdbWatchProviderCountry | null): boolean {
+    if (!country) {
+      return false;
+    }
+    const n =
+      (country.flatrate?.length ?? 0) + (country.rent?.length ?? 0) + (country.buy?.length ?? 0);
+    return n > 0;
   }
 
   private pickCountryProviders(response: TmdbWatchProvidersResponse): TmdbWatchProviderCountry | null {
@@ -88,10 +114,10 @@ export class MovieDetailsDialog {
     ].filter((section) => section.items.length > 0);
   }
 
-  private flattenProviders(
+  private flattenProviderEntries(
     countryProviders: TmdbWatchProviderCountry | null,
     max: number
-  ): TmdbWatchProvider[] {
+  ): WatchProviderEntry[] {
     if (!countryProviders || max <= 0) {
       return [];
     }
@@ -103,17 +129,23 @@ export class MovieDetailsDialog {
     ];
 
     const seen = new Set<number>();
-    const out: TmdbWatchProvider[] = [];
+    const out: WatchProviderEntry[] = [];
     for (const p of ordered) {
       if (seen.has(p.provider_id)) continue;
       seen.add(p.provider_id);
-      out.push(p);
+      out.push({ provider: p, url: this.resolveWatchUrl(p) });
       if (out.length >= max) break;
     }
     return out;
   }
 
-  getProviderLink(provider: TmdbWatchProvider): string | null {
+  /** URL direta para a plataforma (evita themoviedb.org). */
+  private resolveWatchUrl(provider: TmdbWatchProvider): string | null {
+    const raw = provider.link?.trim();
+    if (raw && !this.isTmdbUrl(raw)) {
+      return raw;
+    }
+
     const knownLinks: Record<number, string> = {
       8: 'https://www.netflix.com/',
       9: 'https://www.primevideo.com/',
@@ -142,6 +174,15 @@ export class MovieDetailsDialog {
     if (name.includes('star+')) return 'https://www.starplus.com/';
 
     return null;
+  }
+
+  private isTmdbUrl(url: string): boolean {
+    try {
+      const host = new URL(url).hostname.toLowerCase();
+      return host.includes('themoviedb.org');
+    } catch {
+      return false;
+    }
   }
 
   close() {

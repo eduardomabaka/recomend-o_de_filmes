@@ -19,6 +19,20 @@
   background: var(--surface-strong);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  :host-context(.reco-page) .card {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.12s ease;
+  }
+
+  :host-context(.reco-page) .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+  }
+}
+
 .card:focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 3px;

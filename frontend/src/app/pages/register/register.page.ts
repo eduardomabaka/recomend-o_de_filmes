@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MovieService } from '../../core/movie.service';
 import { AuthService } from '../../core/auth.service';
 import type { QuizPayload } from '../../core/api.types';
@@ -20,7 +20,7 @@ const CONTEXT_OPTS = [
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './register.page.html',
   styleUrl: './register.page.scss'
 })

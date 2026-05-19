@@ -1,19 +1,20 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   email = '';
   password = '';
   error = signal('');
+  success = signal('');
   loading = signal(false);
 
   constructor(
@@ -21,6 +22,13 @@ export class LoginPage {
     private readonly router: Router,
     private readonly route: ActivatedRoute
   ) {}
+
+  ngOnInit(): void {
+    const msg = this.route.snapshot.queryParamMap.get('msg');
+    if (msg === 'account-deleted') {
+      this.success.set('Conta eliminada com sucesso.');
+    }
+  }
 
   submit(): void {
     this.error.set('');

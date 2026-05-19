@@ -1,46 +1,47 @@
-<section class="header">
-  <div>
-    <h2>Recomendações</h2>
-    <p>Baseado no filme TMDB #{{ movieId() }}.</p>
-  </div>
+<section class="reco-page">
+  <div class="header">
+    <div>
+      <h2>Recomendações</h2>
+      <p>Baseado no filme TMDB #{{ movieId() }}.</p>
+    </div>
 
-  <div class="controls">
-    <select [value]="lang()" (change)="lang.set(($any($event.target).value))">
-      <option value="pt-PT">pt-PT</option>
-      <option value="en-US">en-US</option>
-    </select>
-    <div class="pager">
-      <button (click)="prev()" [disabled]="page() <= 1">Anterior</button>
-      <span>Página {{ page() }} de {{ totalPages() }}</span>
-      <button (click)="next()" [disabled]="isLastPage()">Próxima</button>
+    <div class="controls">
+      <select [value]="lang()" (change)="lang.set(($any($event.target).value))">
+        <option value="pt-PT">pt-PT</option>
+        <option value="en-US">en-US</option>
+      </select>
+      <div class="pager">
+        <button (click)="prev()" [disabled]="page() <= 1">Anterior</button>
+        <span>Página {{ page() }} de {{ totalPages() }}</span>
+        <button (click)="next()" [disabled]="isLastPage()">Próxima</button>
+      </div>
     </div>
   </div>
-</section>
 
-@if (!movieId()) {
-  <div class="error">ID inválido.</div>
-} @else {
-  @if (vm$() | async; as data) {
-    @if (data?.error) {
-      <div class="error">{{ data.error }}</div>
-    } @else {
-      <div class="grid">
-        @for (m of data.results; track m.id) {
-          <app-movie-card
-            [movie]="m"
-            [showFavoriteButton]="auth.isLoggedIn()"
-            [favorite]="favoriteIds().includes(m.id)"
-            [recommendationRootMovieId]="movieId()"
-            [recommendationPickMovieId]="recommendationPickId()"
-            (movieClick)="onMovieClick($event)"
-            (favoriteToggle)="onFavoriteToggle(m)"
-            (recommendationFavoriteToggle)="onRecommendationFavoriteToggle($event)"
-          />
-        }
-      </div>
-    }
+  @if (!movieId()) {
+    <div class="error">ID inválido.</div>
   } @else {
-    <div class="loading">A carregar…</div>
+    @if (vm$() | async; as data) {
+      @if (data?.error) {
+        <div class="error">{{ data.error }}</div>
+      } @else {
+        <div class="grid">
+          @for (m of data.results; track m.id) {
+            <app-movie-card
+              [movie]="m"
+              [showFavoriteButton]="auth.isLoggedIn()"
+              [favorite]="favoriteIds().includes(m.id)"
+              [recommendationRootMovieId]="movieId()"
+              [recommendationPickMovieId]="recommendationPickId()"
+              (movieClick)="onMovieClick($event)"
+              (favoriteToggle)="onFavoriteToggle(m)"
+              (recommendationFavoriteToggle)="onRecommendationFavoriteToggle($event)"
+            />
+          }
+        </div>
+      }
+    } @else {
+      <div class="loading">A carregar…</div>
+    }
   }
-}
-
+</section>

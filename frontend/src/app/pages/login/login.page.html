@@ -17,8 +17,13 @@
       />
     </label>
 
+    <p class="forgot-row"><a routerLink="/forgot-password">Esqueceu a senha?</a></p>
+
     @if (error()) {
       <p class="form-error">{{ error() }}</p>
+    }
+    @if (success()) {
+      <p class="feedback-success">{{ success() }}</p>
     }
 
     <button type="submit" [disabled]="loading()">

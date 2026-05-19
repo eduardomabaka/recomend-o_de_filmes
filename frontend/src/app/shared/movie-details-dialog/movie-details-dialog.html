@@ -56,36 +56,32 @@
         </div>
 
         <div class="section">
-          <h3>Onde encontrar</h3>
-          @if (topProviders().length) {
+          <h3>Onde assistir</h3>
+          @if (!watchProvidersLoaded()) {
+            <p class="watch-loading">A carregar plataformas…</p>
+          } @else if (!hasWatchProviders() || !topProviderEntries().length) {
+            <p class="empty-state">Não disponível na sua região</p>
+          } @else {
             <div class="platforms-grid">
-              @for (provider of topProviders(); track provider.provider_id) {
-                <a
+              @for (entry of topProviderEntries(); track entry.provider.provider_id) {
+                <button
+                  type="button"
                   class="platform-tile"
-                  [href]="getProviderLink(provider) || providerLink() || '#'"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  title="Ver {{ provider.provider_name }}"
+                  [class.platform-tile--disabled]="!entry.url"
+                  [disabled]="!entry.url"
+                  (click)="openWatchEntry(entry)"
+                  [title]="entry.url ? 'Abrir ' + entry.provider.provider_name + ' (nova aba)' : 'Link não disponível'"
                 >
-                  @if (provider.logo_path) {
+                  @if (entry.provider.logo_path) {
                     <img
-                      src="https://image.tmdb.org/t/p/w92{{ provider.logo_path }}"
-                      [alt]="provider.provider_name"
+                      src="https://image.tmdb.org/t/p/w92{{ entry.provider.logo_path }}"
+                      [alt]="entry.provider.provider_name"
                     />
                   }
-                  <span>{{ provider.provider_name }}</span>
-                </a>
+                  <span>{{ entry.provider.provider_name }}</span>
+                </button>
               }
             </div>
-            @if (providerLink()) {
-              <p class="watch-link">
-                <a [href]="providerLink()" target="_blank" rel="noreferrer noopener">
-                  Ver todas as opções no TMDB
-                </a>
-              </p>
-            }
-          } @else {
-            <p class="empty-state">Não foi possível obter os sites de streaming para este filme.</p>
           }
         </div>
       </div>

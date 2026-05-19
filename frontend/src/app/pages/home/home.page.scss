@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .hero {
   padding: 0.5rem 0 2rem;
 }
@@ -149,4 +153,102 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.5rem;
+}
+
+/* Animações (respeitam prefers-reduced-motion) */
+@keyframes homeFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes homeFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 {
+    animation: homeFadeUp 0.48s ease backwards;
+  }
+
+  .lead {
+    animation: homeFadeUp 0.52s ease 0.08s backwards;
+  }
+
+  .actions {
+    animation: homeFadeUp 0.52s ease 0.16s backwards;
+  }
+
+  .blocks article {
+    animation: homeFadeUp 0.5s ease backwards;
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease,
+      border-color 0.22s ease;
+  }
+
+  .blocks article:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+
+  .blocks article:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .blocks article:nth-child(3) {
+    animation-delay: 0.19s;
+  }
+
+  .blocks article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+    border-color: rgba(192, 57, 43, 0.28);
+  }
+
+  .signup-steps {
+    animation: homeFadeIn 0.55s ease 0.12s both;
+  }
+
+  .steps li {
+    animation: homeFadeUp 0.42s ease backwards;
+  }
+
+  .steps li:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+
+  .steps li:nth-child(2) {
+    animation-delay: 0.26s;
+  }
+
+  .steps li:nth-child(3) {
+    animation-delay: 0.32s;
+  }
+
+  .steps li:nth-child(4) {
+    animation-delay: 0.38s;
+  }
+
+  .signup-cta {
+    animation: homeFadeUp 0.48s ease 0.42s both;
+  }
+
+  .step-num {
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  .steps li:hover .step-num {
+    transform: scale(1.06);
+    filter: brightness(1.06);
+  }
 }

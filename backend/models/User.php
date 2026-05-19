@@ -116,4 +116,21 @@ final class User
             'id' => $id,
         ]);
     }
+
+    public static function updatePassword(int $id, string $plainPassword): void
+    {
+        $pdo = Database::pdo();
+        $stmt = $pdo->prepare('UPDATE users SET password_hash = :hash WHERE id = :id');
+        $stmt->execute([
+            'hash' => password_hash($plainPassword, PASSWORD_DEFAULT),
+            'id' => $id,
+        ]);
+    }
+
+    public static function deleteById(int $id): void
+    {
+        $pdo = Database::pdo();
+        $stmt = $pdo->prepare('DELETE FROM users WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
 }

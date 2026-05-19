@@ -148,6 +148,15 @@ a.active {
   padding: 1.2rem;
 }
 
+.route-outlet-host {
+  position: relative;
+}
+
+.route-animation-inner {
+  position: relative;
+  min-height: 2rem;
+}
+
 .footer {
   margin-top: auto;
   border-top: 1px solid var(--border);

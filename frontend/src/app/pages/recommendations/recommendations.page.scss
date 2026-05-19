@@ -55,3 +55,82 @@ button {
 .error {
   border-color: var(--danger-border);
 }
+
+@keyframes recoFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reco-page .grid > app-movie-card {
+    display: block;
+    animation: recoFadeUp 0.45s ease backwards;
+  }
+
+  .reco-page .grid > app-movie-card:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(2) {
+    animation-delay: 0.045s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(3) {
+    animation-delay: 0.09s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(4) {
+    animation-delay: 0.135s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(5) {
+    animation-delay: 0.18s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(6) {
+    animation-delay: 0.225s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(7) {
+    animation-delay: 0.27s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(8) {
+    animation-delay: 0.315s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(9) {
+    animation-delay: 0.36s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(10) {
+    animation-delay: 0.405s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(11) {
+    animation-delay: 0.45s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(12) {
+    animation-delay: 0.495s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(13) {
+    animation-delay: 0.54s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(14) {
+    animation-delay: 0.585s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(15) {
+    animation-delay: 0.63s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(16) {
+    animation-delay: 0.675s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(17) {
+    animation-delay: 0.72s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(18) {
+    animation-delay: 0.765s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(19) {
+    animation-delay: 0.81s;
+  }
+  .reco-page .grid > app-movie-card:nth-child(20) {
+    animation-delay: 0.855s;
+  }
+}

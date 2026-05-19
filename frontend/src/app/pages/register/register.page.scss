@@ -53,7 +53,7 @@ button:disabled {
 
 .form-error {
   margin: 0;
-  color: #ff8fb8;
+  color: #c0392b;
   font-size: 0.92rem;
 }
 
@@ -132,4 +132,97 @@ select {
 
 .bullets li {
   margin-bottom: 0.35rem;
+}
+
+:host {
+  display: block;
+}
+
+.register-footer {
+  margin: 1.15rem 0 0;
+  text-align: center;
+}
+
+.register-footer a {
+  color: #888888;
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .register-card {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .register-card:hover {
+    box-shadow: 0 8px 32px rgba(192, 57, 43, 0.1);
+  }
+
+  .register-footer a {
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+  }
+
+  .register-footer a:hover {
+    color: #c0392b;
+    text-decoration: underline;
+  }
+
+  input:not([type='checkbox']),
+  select {
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  input:not([type='checkbox']):hover,
+  select:hover,
+  input:not([type='checkbox']):focus,
+  select:focus,
+  input:not([type='checkbox']):focus-visible,
+  select:focus-visible {
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+    outline: none;
+  }
+
+  .actions button:not(.btn-secondary) {
+    transition:
+      transform 0.2s ease,
+      filter 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .actions button:not(.btn-secondary):hover {
+    transform: scale(1.02);
+    filter: brightness(0.9);
+    box-shadow: 0 8px 24px rgba(192, 57, 43, 0.35);
+  }
+
+  .actions button:not(.btn-secondary):active {
+    transform: scale(0.97);
+  }
+
+  .actions .btn-secondary {
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .actions .btn-secondary:hover {
+    border-color: rgba(192, 57, 43, 0.45);
+    color: #f0f0f0;
+    transform: scale(1.02);
+  }
+
+  .actions .btn-secondary:active {
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-footer a:hover {
+    color: #c0392b;
+    text-decoration: underline;
+  }
 }

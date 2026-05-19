@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { AuthService } from '../../core/auth.service';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './profile.page.html',
-  styleUrl: './profile.page.scss'
+  styleUrl: './profile.page.scss',
 })
 export class ProfilePage implements OnInit {
   name = '';
@@ -20,7 +21,17 @@ export class ProfilePage implements OnInit {
   editingOverlay = signal(false);
   saveBanner = signal('');
 
-  constructor(protected readonly auth: AuthService) {}
+  deleteOverlay = signal(false);
+  deleteCode = '';
+  deleteError = signal('');
+  deleteSuccess = signal('');
+  deleteLoading = signal(false);
+  deleteRequestLoading = signal(false);
+
+  constructor(
+    protected readonly auth: AuthService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     const user = this.auth.user();
@@ -59,10 +70,58 @@ export class ProfilePage implements OnInit {
     document.body.style.overflow = '';
   }
 
+  protected openDeleteOverlay(): void {
+    this.deleteCode = '';
+    this.deleteError.set('');
+    this.deleteSuccess.set('');
+    this.deleteOverlay.set(true);
+    document.body.style.overflow = 'hidden';
+    this.deleteRequestLoading.set(true);
+    this.auth.requestAccountDeletion().subscribe((res) => {
+      this.deleteRequestLoading.set(false);
+      if (res.error) {
+        this.deleteError.set(res.error);
+        return;
+      }
+      this.deleteSuccess.set(res.message ?? 'Email enviado com o código.');
+    });
+  }
+
+  protected cancelDelete(): void {
+    this.deleteOverlay.set(false);
+    this.deleteCode = '';
+    this.deleteError.set('');
+    this.deleteSuccess.set('');
+    document.body.style.overflow = '';
+  }
+
+  protected confirmDelete(): void {
+    this.deleteError.set('');
+    const code = this.deleteCode.trim();
+    if (code.length < 6) {
+      this.deleteError.set('Insira o código de 6 dígitos.');
+      return;
+    }
+
+    this.deleteLoading.set(true);
+    this.auth.confirmAccountDeletion({ code }).subscribe((res) => {
+      this.deleteLoading.set(false);
+      if (res.error) {
+        this.deleteError.set(res.error);
+        return;
+      }
+      document.body.style.overflow = '';
+      this.router.navigate(['/login'], { queryParams: { msg: 'account-deleted' } });
+    });
+  }
+
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     if (this.editingOverlay()) {
       this.cancelEdit();
+    }
+    if (this.deleteOverlay()) {
+      this.cancelDelete();
     }
   }
 
@@ -89,7 +148,7 @@ export class ProfilePage implements OnInit {
       .updateProfile({
         name: this.name.trim(),
         email: this.email.trim(),
-        password: this.password || undefined
+        password: this.password || undefined,
       })
       .subscribe((res) => {
         this.loading.set(false);

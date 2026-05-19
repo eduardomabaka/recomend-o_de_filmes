@@ -19,13 +19,15 @@
 
       <button type="button" class="btn-edit" (click)="openEditOverlay()">Editar perfil</button>
 
+      <button type="button" class="btn-delete-account" (click)="openDeleteOverlay()">Excluir conta</button>
+
       @if (saveBanner()) {
         <p class="banner-success">{{ saveBanner() }}</p>
       }
     }
   </aside>
 
-  @if (!editingOverlay()) {
+  @if (!editingOverlay() && !deleteOverlay()) {
     <section class="profile-hint" aria-live="polite">
       <p class="muted">Utilize «Editar perfil» para alterar nome, email ou palavra-passe.</p>
     </section>
@@ -71,6 +73,55 @@
           <button type="submit" [disabled]="loading()">{{ loading() ? 'A guardar…' : 'Guardar' }}</button>
         </div>
       </form>
+    </dialog>
+  }
+
+  @if (deleteOverlay()) {
+    <div class="edit-overlay-backdrop" (click)="cancelDelete()" role="presentation"></div>
+    <dialog class="delete-overlay-panel" open aria-modal="true" aria-labelledby="delete-heading">
+      <h2 id="delete-heading">Eliminar conta</h2>
+      <p class="delete-warning">Esta ação é irreversível.</p>
+      <p class="delete-muted">
+        Foi enviado um email com um código de 6 dígitos, válido por 10 minutos. Após 3 tentativas falhadas terá de
+        solicitar um novo código.
+      </p>
+
+      @if (deleteRequestLoading()) {
+        <p class="delete-muted">A enviar email…</p>
+      }
+
+      @if (deleteSuccess() && !deleteRequestLoading()) {
+        <p class="feedback-success">{{ deleteSuccess() }}</p>
+      }
+
+      <label class="delete-code-label">
+        <span>Código do email</span>
+        <input
+          [(ngModel)]="deleteCode"
+          name="deleteCode"
+          type="text"
+          inputmode="numeric"
+          maxlength="8"
+          autocomplete="one-time-code"
+          placeholder="000000"
+        />
+      </label>
+
+      @if (deleteError()) {
+        <p class="feedback-error">{{ deleteError() }}</p>
+      }
+
+      <div class="overlay-actions">
+        <button type="button" class="btn-secondary" (click)="cancelDelete()">Cancelar</button>
+        <button
+          type="button"
+          class="btn-confirm-delete"
+          [disabled]="deleteLoading() || deleteRequestLoading()"
+          (click)="confirmDelete()"
+        >
+          {{ deleteLoading() ? 'A eliminar…' : 'Confirmar exclusão' }}
+        </button>
+      </div>
     </dialog>
   }
 </section>

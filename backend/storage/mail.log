@@ -1,0 +1,22 @@
+[LOG_ONLY] [2026-05-13T15:17:10+00:00]
+TO: eduardomabaka20@gmail.com
+SUBJECT: Recuperação de palavra-passe
+Olá Eduardo Mabaka,
+
+Para definir uma nova palavra-passe, abra o link:
+http://localhost:4200/reset-password?token=bc087dba55ecb53ca32028acbe951fe21b58b8fde273da1fdc943a1cb75f7461
+
+O link expira em 1 hora.
+
+---
+[LOG_ONLY] [2026-05-13T15:51:02+00:00]
+TO: eduardomabaka20@gmail.com
+SUBJECT: Recuperação de palavra-passe
+Olá Eduardo Mabaka,
+
+Para definir uma nova palavra-passe, abra o link:
+http://localhost:4200/reset-password?token=60e7f0d575a488a6ba114856f71e37a42ddda72186c6c71dd63731047968749b
+
+O link expira em 1 hora.
+
+---

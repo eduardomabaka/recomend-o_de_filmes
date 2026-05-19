@@ -96,3 +96,56 @@ select {
     0 24px 80px rgba(0, 0, 0, 0.35),
     0 8px 24px rgba(0, 0, 0, 0.18);
 }
+
+.feedback-error {
+  color: #c0392b;
+}
+
+.feedback-success {
+  color: #27ae60;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  main.container button:not(:disabled):not(.theme-toggle):not(.favorite-heart):not(.reco-heart):not(.platform-tile):not(.close-btn),
+  main.container a.btn,
+  .topbar .logout-btn:not(:disabled),
+  .topbar a.btn {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      filter 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  /* Sombra ghost / outline — igual .btn.ghost na página inicial */
+  main.container .controls button:not(:disabled):hover,
+  main.container button.btn-secondary:not(:disabled):hover,
+  main.container a.btn.ghost:hover,
+  .topbar .logout-btn:not(:disabled):hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    filter: none;
+  }
+
+  /* Sombra primária / CTA — igual .btn.primary na página inicial */
+  main.container button[type='submit']:not(:disabled):not(.theme-toggle):not(.favorite-heart):not(.reco-heart):not(.platform-tile):not(.close-btn):hover,
+  main.container button.btn-edit:not(:disabled):hover,
+  main.container button.btn-delete-account:not(:disabled):hover,
+  main.container button.btn-confirm-delete:not(:disabled):hover,
+  main.container
+    form
+    button[type='button']:not(:disabled):not(.btn-secondary):not(.theme-toggle):not(.favorite-heart):not(.reco-heart):not(.platform-tile):not(.close-btn):hover,
+  main.container a.btn:not(.ghost):hover,
+  .topbar a.btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 28px rgba(192, 57, 43, 0.38);
+    filter: brightness(1.04);
+  }
+
+  main.container button:not(:disabled):not(.theme-toggle):not(.favorite-heart):not(.reco-heart):not(.platform-tile):not(.close-btn):active,
+  main.container a.btn:active,
+  .topbar .logout-btn:not(:disabled):active,
+  .topbar a.btn:active {
+    transform: scale(0.97);
+  }
+}
